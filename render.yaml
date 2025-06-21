@@ -15,7 +15,7 @@ services:
         value: production
 
   # Frontend Service (React Static Site)
-  - type: static_site
+  - type: static site
     name: treatsby-frontend
     rootDir: ./frontend
     buildCommand: npm install && npm run build
