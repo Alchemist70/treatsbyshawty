@@ -23,7 +23,7 @@ services:
     staticPublishPath: ./build
     envVars:
       - key: REACT_APP_API_URL
-        value: https://treatsby-backend.onrender.com # Manually set backend URL
+        value: https://treatsbyshawty.onrender.com # Manually set backend URL
     routes:
       - type: rewrite
         source: /*
