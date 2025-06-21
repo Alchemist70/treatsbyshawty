@@ -1,5 +1,5 @@
 services:
-  # Backend Service (Node.js)
+  # Backend Service (Node.js) - This is correct
   - type: web
     name: treatsby-backend
     runtime: node
@@ -14,19 +14,20 @@ services:
       - key: NODE_ENV
         value: production
 
-  # Frontend Service (React Static Site)
-  - type: static
+  # Frontend Service (React) - Your version with the required routes
+  - type: web
     name: treatsby-frontend
+    runtime: static
     rootDir: ./frontend
     buildCommand: npm install && npm run build
-    publishDir: ./build
+    staticPublishPath: ./build
     envVars:
       - key: REACT_APP_API_URL
         fromService:
           type: web
           name: treatsby-backend
           property: url
-    routes:
+    routes: # <-- This is the crucial addition
       - type: rewrite
         source: /*
         destination: /index.html
