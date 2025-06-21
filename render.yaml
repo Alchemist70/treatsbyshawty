@@ -1,5 +1,5 @@
 services:
-  # Backend Service (Node.js) - This is correct
+  # Backend Service (Node.js)
   - type: web
     name: treatsby-backend
     runtime: node
@@ -14,7 +14,7 @@ services:
       - key: NODE_ENV
         value: production
 
-  # Frontend Service (React) - Your version with the required routes
+  # Frontend Service (React)
   - type: web
     name: treatsby-frontend
     runtime: static
@@ -27,7 +27,3 @@ services:
           type: web
           name: treatsby-backend
           property: url
-    routes: # <-- This is the crucial addition
-      - type: rewrite
-        source: /*
-        destination: /index.html
