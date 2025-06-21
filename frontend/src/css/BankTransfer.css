@@ -1,0 +1,138 @@
+.bank-transfer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  background-color: #fff9f5;
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+}
+
+.bank-transfer-container h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #c72c6c;
+  margin-bottom: 2rem;
+  font-family: "Dancing Script", cursive;
+}
+
+.bank-transfer-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+  width: 100%;
+  max-width: 550px;
+  margin-bottom: 2rem;
+}
+
+.bank-transfer-title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #c72c6c;
+  margin-bottom: 1.5rem;
+}
+
+.amount-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fdf2f8;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.amount-label {
+  font-size: 1.2rem;
+  color: #555;
+}
+
+.amount-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #c72c6c;
+}
+
+.bank-details h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #333;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.5rem;
+}
+
+.bank-details p {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+.transfer-instructions {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #fff0f6;
+  border: 1px solid #fbcfe8;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  text-align: center;
+  color: #832753;
+}
+
+.upload-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.file-label {
+  background-color: #fce7f3;
+  color: #9d2664;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-weight: 500;
+}
+
+.file-label:hover {
+  background-color: #fbcfe8;
+}
+
+.file-name {
+  color: #555;
+  font-style: italic;
+}
+
+.upload-btn {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: linear-gradient(to right, #fddb8c, #f373b5);
+  color: white;
+  margin-top: 1rem;
+}
+
+.upload-btn:hover {
+  opacity: 0.9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.upload-btn:disabled {
+  background: #e5e5e5;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #d90429;
+  text-align: center;
+  margin-top: 1rem;
+}

@@ -1,0 +1,120 @@
+.admin-feedback-container {
+  padding: 2rem;
+  background-color: #f9fafb;
+}
+
+.admin-feedback-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #be185d;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #fbcfe8;
+  padding-bottom: 0.5rem;
+}
+
+.admin-feedback-filters {
+  margin-bottom: 1.5rem;
+}
+
+.admin-feedback-filters button {
+  background-color: #fff;
+  border: 1px solid #fbcfe8;
+  color: #be185d;
+  padding: 0.5rem 1rem;
+  margin-right: 0.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.admin-feedback-filters button:hover {
+  background-color: #fce7f3;
+}
+
+.admin-feedback-filters button.active {
+  background-color: #be185d;
+  color: #fff;
+  border-color: #be185d;
+}
+
+.error-message {
+  color: #ef4444;
+}
+
+.feedback-list {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .feedback-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .feedback-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.feedback-card {
+  background-color: #fff;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.feedback-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.feedback-type {
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  color: #fff;
+}
+
+.feedback-type.website-order {
+  background-color: #db2777;
+}
+
+.feedback-type.pre-order {
+  background-color: #9d174d;
+}
+
+.feedback-rating {
+  font-size: 1.25rem;
+  color: #f59e0b;
+}
+
+.feedback-comment {
+  font-size: 1rem;
+  color: #4b5563;
+  margin-bottom: 1rem;
+  flex-grow: 1;
+  font-style: italic;
+  border-left: 3px solid #fbcfe8;
+  padding-left: 1rem;
+}
+
+.feedback-card-footer {
+  font-size: 0.875rem;
+  color: #6b7280;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #f3f4f6;
+  padding-top: 1rem;
+  margin-top: auto;
+}

@@ -1,0 +1,165 @@
+/* General Menu Page Styling */
+.menu-page-container {
+  padding: 2rem 1rem;
+  background-color: #fffafb;
+  min-height: 100vh;
+}
+
+/* Page Title */
+.menu-page-title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #be185d; /* Dark Pink */
+  margin-bottom: 1.5rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Filter Bar */
+.menu-filter-bar {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 2.5rem;
+}
+
+.menu-filter-btn {
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 9999px; /* Pill shape */
+  border: 2px solid transparent;
+  background-color: #fce7f3; /* Light Pink */
+  color: #be185d; /* Dark Pink */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.menu-filter-btn:hover {
+  background-color: #fbcfe8; /* Slightly darker pink */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.menu-filter-btn.selected {
+  background-color: #be185d; /* Dark Pink */
+  color: #fff;
+  border-color: #be185d;
+  box-shadow: 0 2px 6px rgba(190, 24, 93, 0.3);
+}
+
+/* Products Grid */
+.menu-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Product Card */
+.menu-product-card {
+  background: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.menu-product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.menu-product-image {
+  width: 100%;
+  height: 200px; /* Fixed height for all images */
+  object-fit: cover; /* Ensures image covers the area without distortion */
+  border-bottom: 1px solid #fce7f3;
+}
+
+.menu-product-details {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Allows this section to grow and push the button to the bottom */
+}
+
+.menu-product-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 0.25rem;
+}
+
+.menu-product-desc {
+  font-size: 0.95rem;
+  color: #666;
+  margin-bottom: 1rem;
+  flex-grow: 1; /* Pushes price and button down */
+}
+
+.menu-product-price {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #be185d;
+  margin-bottom: 1rem;
+}
+
+/* Add to Cart Button */
+.menu-add-btn {
+  display: block;
+  width: calc(100% - 2.5rem);
+  margin: 0 1.25rem 1.25rem;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 0.5rem;
+  border: none;
+  background-color: #fbbf24; /* Yellow */
+  color: #854d0e; /* Dark Yellow text */
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.menu-add-btn:hover {
+  background-color: #f59e0b; /* Darker Yellow */
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+}
+
+.menu-add-btn.added {
+  background-color: #4ade80; /* Green */
+  color: #fff;
+  cursor: default;
+}
+
+/* Loading and Error states */
+.menu-loading,
+.menu-error {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+  padding: 4rem 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .menu-page-container {
+    padding: 1.5rem 0.75rem;
+  }
+
+  .menu-page-title {
+    font-size: 2rem;
+  }
+
+  .menu-products-grid {
+    grid-template-columns: 1fr; /* Single column on very small screens */
+    gap: 1.5rem;
+  }
+}

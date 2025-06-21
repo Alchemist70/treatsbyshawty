@@ -1,0 +1,131 @@
+.thank-you-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  background-color: #fdf2f8; /* A very light pink */
+  min-height: 100vh;
+}
+
+.thank-you-card,
+.feedback-form-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  padding: 30px;
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.thank-you-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.thank-you-card h2 {
+  color: #be185d; /* Pink-700 */
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.thank-you-card p {
+  color: #4b5563; /* Gray-600 */
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.cta-link {
+  display: inline-block;
+  background-color: #be185d;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  margin: 0 10px;
+}
+
+.cta-link:hover {
+  background-color: #9d174d; /* Darker pink */
+}
+
+.cta-link.secondary {
+  background-color: transparent;
+  color: #be185d;
+  border: 2px solid #be185d;
+}
+
+.cta-link.secondary:hover {
+  background-color: #fdf2f8;
+}
+
+.feedback-form-card h3 {
+  color: #be185d;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.star-rating {
+  margin-bottom: 1.5rem;
+}
+
+.star-rating .star-filled,
+.star-rating .star-empty {
+  font-size: 2.5rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.star-rating .star-filled {
+  color: #facc15; /* Amber-400 */
+}
+
+.star-rating .star-empty {
+  color: #d1d5db; /* Gray-300 */
+}
+
+.feedback-form-card textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  min-height: 100px;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.feedback-error,
+.feedback-success {
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.feedback-error {
+  color: #ef4444; /* Red-500 */
+}
+
+.feedback-success {
+  color: #22c55e; /* Green-500 */
+}
+
+.submit-feedback-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #be185d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-feedback-btn:hover {
+  background-color: #9d174d;
+}

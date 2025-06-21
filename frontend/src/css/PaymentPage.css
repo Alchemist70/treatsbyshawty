@@ -1,0 +1,132 @@
+/* Payment Page Container */
+.payment-page-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #fff7f5 0%, #fff0f3 100%);
+  padding: 2rem;
+}
+
+/* Main Payment Card */
+.payment-card {
+  background-color: white;
+  border-radius: 24px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.05),
+    0 8px 10px -6px rgb(0 0 0 / 0.05);
+  text-align: center;
+}
+
+.back-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #888;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+  text-decoration: underline;
+}
+
+.payment-card-title {
+  font-family: "Inter", sans-serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.payment-card-icons {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: #a0aec0; /* Gray-400 */
+}
+
+.payment-card-icons .fab {
+  margin: 0 10px;
+}
+
+.payment-summary-text {
+  font-size: 1.1rem;
+  color: #4a5568; /* Gray-600 */
+}
+
+/* Payment Method Selection Boxes */
+.payment-method-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.payment-method-option {
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.payment-method-option.selected {
+  border-color: #be185d;
+  background-color: #fdf2f8;
+  color: #be185d;
+  box-shadow: 0 0 10px #be185d33;
+}
+
+.payment-method-option.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Special case for iDeal to be on its own row */
+.payment-method-option:nth-child(3) {
+  grid-column: 1 / -1;
+  max-width: 50%;
+  margin: 0 auto;
+}
+
+/* Action Buttons */
+.payment-action-btn {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.payment-action-btn.primary {
+  background: linear-gradient(to right, #f59e0b, #ef4444);
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.payment-action-btn.secondary {
+  background-color: #f3f4f6;
+  color: #be185d;
+}
+
+.payment-action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.payment-error {
+  color: #ef4444;
+  font-weight: 500;
+  margin-top: 1rem;
+}

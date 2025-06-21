@@ -1,0 +1,87 @@
+/* frontend/src/css/AdminProducts.css */
+
+.admin-products-container {
+  padding: 2rem;
+  background-color: #fdf2f8;
+  min-height: 60vh;
+}
+
+.admin-products-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.admin-products-header h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #be185d;
+}
+
+.admin-products-table-container {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  overflow-x: auto;
+}
+
+.admin-products-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.admin-products-table th,
+.admin-products-table td {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.admin-products-table th {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #4b5563;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: #f9fafb;
+}
+
+.admin-products-table tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-products-table .action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.edit-btn,
+.delete-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.edit-btn {
+  background-color: #db2777;
+  color: white;
+}
+
+.edit-btn:hover {
+  background-color: #c2185b;
+}
+
+.delete-btn {
+  background-color: #f3f4f6;
+  color: #be185d;
+  border: 1px solid #e5e7eb;
+}
+
+.delete-btn:hover {
+  background-color: #e5e7eb;
+}

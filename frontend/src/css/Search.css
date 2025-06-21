@@ -1,0 +1,115 @@
+/* frontend/src/css/Search.css */
+
+body {
+  background-color: #fdf2f8; /* A fallback for the gradient */
+}
+
+.search-page-container {
+  min-height: 100vh;
+  padding: 150px 2rem 2rem;
+  background: linear-gradient(to bottom, #fdf2f8, #fce7f3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.search-page-title {
+  font-family: "Inter", sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.search-results-container {
+  background-color: white;
+  border-radius: 24px;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+    0 8px 10px -6px rgb(0 0 0 / 0.1);
+  padding: 2rem;
+  width: 100%;
+  max-width: 80rem; /* Increased max-width */
+}
+
+.search-results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+  justify-items: center;
+}
+
+.search-product-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.search-product-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+  box-shadow: 0 0 20px rgba(219, 39, 119, 0.3); /* Pink glow */
+}
+
+.search-product-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #db2777; /* Hot Pink */
+  text-decoration: underline;
+  text-decoration-color: #3b82f6; /* Blue */
+  margin-bottom: 0.5rem;
+}
+
+.search-product-description {
+  color: #6b7280;
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+.search-product-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.search-product-price {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.search-add-to-cart-btn {
+  font-family: "Inter", sans-serif;
+  background-color: transparent;
+  border: 1px solid #9ca3af;
+  color: #374151;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.search-add-to-cart-btn:hover {
+  background-color: #f3f4f6;
+  border-color: #6b7280;
+}
+
+.search-no-results {
+  text-align: center;
+  padding: 4rem 2rem;
+  font-size: 1.2rem;
+  color: #4b5563;
+}
+
+.search-loading,
+.search-error {
+  text-align: center;
+  padding: 4rem 2rem;
+  font-size: 1.2rem;
+  color: #4b5563;
+}

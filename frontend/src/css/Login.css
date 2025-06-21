@@ -1,0 +1,236 @@
+/* General Auth Styles */
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fdf2f8; /* A soft pink background */
+  padding: 2rem;
+}
+
+.auth-card {
+  background: #ffffff;
+  border-radius: 1.5rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+  padding: 2.5rem 3rem;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+}
+
+.auth-logo {
+  max-width: 250px;
+  margin: 0 auto 1.5rem auto;
+}
+
+.auth-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.auth-subtitle {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+/* Form Styles */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  text-align: left;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.input-group input {
+  padding: 0.8rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  font-size: 1rem;
+  color: #333;
+  font-weight: 500;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.input-group input:focus {
+  border-color: #ec4899;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+}
+
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 2.5rem; /* Space for the icon */
+}
+
+.password-toggle-icon {
+  position: absolute;
+  right: 1rem;
+  cursor: pointer;
+  color: #94a3b8;
+  transition: color 0.2s ease-in-out;
+}
+
+.password-toggle-icon:hover {
+  color: #333;
+}
+
+/* Auth Options */
+.auth-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.5rem 0;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.remember-me input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 0.25rem;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+}
+
+.remember-me label {
+  font-size: 0.9rem;
+  color: #555;
+  cursor: pointer;
+}
+
+.forgot-password-link {
+  font-size: 0.9rem;
+  color: #ec4899;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+.forgot-password-link:hover {
+  color: #be185d;
+}
+
+/* Button and Links */
+.auth-btn {
+  background: #ec4899;
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.9rem 0;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.auth-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-btn:hover:not(:disabled) {
+  background-color: #be185d;
+}
+
+.auth-switch-link {
+  margin-top: 2rem;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.auth-switch-link a {
+  color: #ec4899;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-switch-link a:hover {
+  text-decoration: underline;
+}
+
+.auth-error {
+  background: #fecdd3;
+  color: #be123c;
+  border-radius: 0.5rem;
+  padding: 0.8rem 1rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.auth-warning {
+  background: #fef3c7;
+  color: #92400e;
+  border-radius: 0.5rem;
+  padding: 0.8rem 1rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Profile Page Specific Styles */
+.profile-details {
+  text-align: left;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #f8fafc;
+  border-radius: 0.5rem;
+  border: 1px solid #e2e8f0;
+}
+.profile-details p {
+  font-size: 1rem;
+  color: #333;
+  margin: 0.5rem 0;
+}
+.profile-divider {
+  border: 0;
+  height: 1px;
+  background-color: #e2e8f0;
+  margin: 2rem 0;
+}
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+.form-row .input-group {
+  flex: 1;
+}
+
+@media (max-width: 600px) {
+  .auth-card {
+    padding: 2rem 1.5rem;
+  }
+}

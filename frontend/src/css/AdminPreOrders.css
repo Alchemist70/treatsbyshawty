@@ -1,0 +1,80 @@
+/* frontend/src/css/AdminPreOrders.css */
+
+.admin-preorders-container {
+  padding: 2rem;
+  background-color: #fdf2f8;
+  min-height: 100vh;
+}
+
+.admin-preorders-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.admin-preorders-header h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #be185d;
+}
+
+.admin-preorders-table-container {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  overflow-x: auto;
+}
+
+.admin-preorders-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.admin-preorders-table th,
+.admin-preorders-table td {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #f3f4f6;
+  vertical-align: middle;
+}
+
+.admin-preorders-table th {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #4b5563;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: #f9fafb;
+}
+
+.admin-preorders-table tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-preorders-table .receipt-link {
+  color: #db2777;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.admin-preorders-table .receipt-link:hover {
+  color: #be185d;
+}
+
+.status-paid {
+  color: #059669;
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: inline-block;
+  margin-top: 4px;
+}
+
+.status-select {
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+  min-width: 120px;
+}

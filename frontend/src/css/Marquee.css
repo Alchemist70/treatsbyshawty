@@ -1,0 +1,35 @@
+/* Marquee Styles */
+.marquee-container {
+  background-color: #fdf2f8; /* Light pink background */
+  color: #be185d; /* Deep pink text */
+  padding: 0.75rem 0;
+  overflow: hidden;
+  white-space: nowrap;
+  position: sticky;
+  top: 145px; /* Adjust this value based on your header's height */
+  z-index: 998; /* Below header, above other content */
+  border-bottom: 1px solid #fbcfe8;
+  display: flex; /* Use flexbox for the container */
+}
+
+.marquee-content {
+  display: flex; /* Use flexbox for the content blocks */
+  align-items: center; /* Vertically center the text */
+  flex-shrink: 0; /* Prevent the content from shrinking */
+  animation: marquee 50s linear infinite; /* Increased duration */
+  font-weight: 500;
+}
+
+.marquee-content span {
+  margin-right: 4rem;
+  font-size: 0.95rem;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
