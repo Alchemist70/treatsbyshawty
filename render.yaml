@@ -14,16 +14,15 @@ services:
       - key: NODE_ENV
         value: production
 
-  # Frontend Service (React)
-  - type: web
+  # Frontend Service (React Static Site)
+  - type: static_site
     name: treatsby-frontend
-    runtime: static
     rootDir: ./frontend
     buildCommand: npm install && npm run build
-    staticPublishPath: ./build
+    publishDir: ./build
     envVars:
       - key: REACT_APP_API_URL
-        value: https://treatsbyshawty.onrender.com # Manually set backend URL
+        value: https://treatsby-backend.onrender.com # Manually set backend URL
     routes:
       - type: rewrite
         source: /*
