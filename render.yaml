@@ -7,15 +7,15 @@ services:
     buildCommand: npm install
     startCommand: node server.js
     envVars:
-      - key: MONGODB_URI # Sensitive value - will be set in Render dashboard
+      - key: MONGODB_URI
         sync: false
-      - key: JWT_SECRET # Sensitive value - will be set in Render dashboard
+      - key: JWT_SECRET
         sync: false
       - key: NODE_ENV
         value: production
 
   # Frontend Service (React Static Site)
-  - type: static site
+  - type: static
     name: treatsby-frontend
     rootDir: ./frontend
     buildCommand: npm install && npm run build
