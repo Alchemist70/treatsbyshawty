@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import "../css/Admin.css";
 import "../css/AdminOrders.css";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import { API_URL } from "../../config";
 
 function StatusModal({ order, onSave, onClose, loading }) {
   // Only allow valid next statuses
@@ -182,18 +184,20 @@ export default function AdminOrders() {
                       {order.phone && <div>Phone: {order.phone}</div>}
                     </td>
                     <td>
-                      {order.paymentReceipt ? (
-                        <a
-                          href={`http://localhost:5000/${order.paymentReceipt}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-pink-600 hover:underline"
-                        >
-                          View Receipt
-                        </a>
-                      ) : (
-                        "N/A"
-                      )}
+                      <div className="order-receipt">
+                        {order.paymentReceipt ? (
+                          <a
+                            href={`${API_URL}/${order.paymentReceipt}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="receipt-link"
+                          >
+                            View Receipt
+                          </a>
+                        ) : (
+                          "N/A"
+                        )}
+                      </div>
                     </td>
                     <td>
                       <div className="action-buttons">

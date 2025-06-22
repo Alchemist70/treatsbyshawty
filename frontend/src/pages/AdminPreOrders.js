@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../css/Admin.css";
 import "../css/AdminPreOrders.css";
 import axios from "axios";
+import { API_URL } from "../../config";
 
 const STATUS_OPTIONS = [
   "pending",
@@ -186,13 +187,14 @@ export default function AdminPreOrders() {
                           {po.customOrder.image && (
                             <div>
                               <img
-                                src={`http://localhost:5000/${po.customOrder.image}`}
+                                src={`${API_URL}/${po.customOrder.image}`}
                                 alt="Custom"
                                 style={{
                                   width: 60,
                                   borderRadius: 8,
                                   marginTop: 4,
                                 }}
+                                className="preorder-image"
                               />
                             </div>
                           )}
@@ -220,7 +222,7 @@ export default function AdminPreOrders() {
                     <td>
                       {po.depositReceipt ? (
                         <a
-                          href={`http://localhost:5000/${po.depositReceipt}`}
+                          href={`${API_URL}/${po.depositReceipt}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="receipt-link"

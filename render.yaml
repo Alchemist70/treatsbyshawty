@@ -17,11 +17,10 @@ services:
   # Frontend Service (React)
   - type: web
     name: treatsby-frontend
-    runtime: static
+    runtime: node
     rootDir: ./frontend
     buildCommand: npm install && npm run build
-    staticPublishPath: ./build
-    startCommand: "" # This is the critical change to prevent npm start
+    startCommand: "npx serve -s build -l $PORT"
     envVars:
       - key: REACT_APP_API_URL
         value: https://treatsbyshawty-backend.onrender.com
