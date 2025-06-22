@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import "../css/Admin.css";
 import axios from "axios";
+import { API_URL } from "../config";
 
 export default function Admin() {
   const [user, setUser] = useState(undefined);
