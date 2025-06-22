@@ -165,6 +165,15 @@ router.post("/:id/reviews", auth, async (req, res) => {
 
     await review.save();
 
+    // Push the review into the product's embedded reviews array
+    product.reviews.push({
+      user: req.user.id,
+      name: req.user.name || "User", // fallback if name is not available
+      rating: Number(rating),
+      comment,
+      createdAt: new Date(),
+    });
+
     // Recalculate the product's average rating
     const reviews = await Review.find({ product: productId });
     product.numReviews = reviews.length;
@@ -175,8 +184,8 @@ router.post("/:id/reviews", auth, async (req, res) => {
 
     res.status(201).json({ message: "Review added successfully." });
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Server Error");
+    console.error("Review submission error:", error);
+    res.status(500).send("Server Error: " + (error.message || error));
   }
 });
 
