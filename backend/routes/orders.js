@@ -5,13 +5,16 @@ const multer = require("multer");
 const path = require("path");
 const Product = require("../models/Product");
 const Review = require("../models/Review");
+const fs = require("fs");
 
 const router = express.Router();
 
 // Set up storage for multer
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/receipts/");
+    const uploadPath = path.join(__dirname, "..", "uploads", "receipts");
+    fs.mkdirSync(uploadPath, { recursive: true });
+    cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
     cb(null, `receipt-${Date.now()}${path.extname(file.originalname)}`);
@@ -265,11 +268,9 @@ router.post("/:id/feedback", auth, async (req, res) => {
     });
 
     if (alreadySubmitted) {
-      return res
-        .status(400)
-        .json({
-          message: "You have already submitted feedback for this order.",
-        });
+      return res.status(400).json({
+        message: "You have already submitted feedback for this order.",
+      });
     }
 
     const review = new Review({
