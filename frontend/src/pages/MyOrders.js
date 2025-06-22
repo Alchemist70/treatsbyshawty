@@ -18,13 +18,17 @@ function ReviewModal({ product, orderId, onClose, onReviewSubmit }) {
     setError("");
     try {
       const token = localStorage.getItem("token");
-      await axios.post(
+      const response = await axios.post(
         `/api/products/${product._id}/reviews`,
         { rating, comment, orderId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      onReviewSubmit();
-      onClose();
+      if (response.status >= 200 && response.status < 300) {
+        onReviewSubmit();
+        onClose();
+      } else {
+        setError(response.data?.message || "Failed to submit review.");
+      }
     } catch (err) {
       setError(err.response?.data?.message || "Failed to submit review.");
     } finally {
@@ -91,13 +95,17 @@ function PreOrderFeedbackModal({ preOrderId, onClose, onFeedbackSubmit }) {
     setError("");
     try {
       const token = localStorage.getItem("token");
-      await axios.post(
+      const response = await axios.post(
         `/api/preorders/${preOrderId}/feedback`,
         { rating, comment },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      onFeedbackSubmit();
-      onClose();
+      if (response.status >= 200 && response.status < 300) {
+        onFeedbackSubmit();
+        onClose();
+      } else {
+        setError(response.data?.message || "Failed to submit feedback.");
+      }
     } catch (err) {
       setError(err.response?.data?.message || "Failed to submit feedback.");
     } finally {

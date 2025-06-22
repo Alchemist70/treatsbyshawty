@@ -6,6 +6,7 @@ const multer = require("multer");
 const path = require("path");
 const axios = require("axios");
 const PreOrderFeedback = require("../models/PreOrderFeedback");
+const fs = require("fs");
 
 const router = express.Router();
 
@@ -15,16 +16,46 @@ const storage = multer.diskStorage({
     let dest = "uploads/";
     if (file.fieldname === "receipt") {
       dest += "receipts/";
+    } else if (file.fieldname === "customImage") {
+      dest += "preorders/";
     }
+    fs.mkdirSync(path.join(__dirname, "..", dest), { recursive: true });
     cb(null, dest);
   },
   filename: function (req, file, cb) {
     const prefix =
       file.fieldname === "receipt" ? "preorder-receipt-" : "preorder-";
-    cb(null, `${prefix}${Date.now()}${path.extname(file.originalname)}`);
+    cb(
+      null,
+      `${prefix}${Date.now()}${require("path").extname(file.originalname)}`
+    );
   },
 });
-const upload = multer({ storage });
+
+const fileFilter = (req, file, cb) => {
+  if (file.fieldname === "receipt") {
+    // Allow images and PDFs for receipts
+    if (
+      file.mimetype.startsWith("image/") ||
+      file.mimetype === "application/pdf"
+    ) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only images and PDFs are allowed for receipts."));
+    }
+  } else if (file.fieldname === "customImage") {
+    // Only allow images for customImage
+    if (file.mimetype.startsWith("image/")) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only images are allowed for custom order images."));
+    }
+  } else {
+    cb(null, true);
+  }
+};
+
+const upload = multer({ storage, fileFilter });
 
 function isAdmin(req, res, next) {
   if (!req.user || !req.user.isAdmin) {

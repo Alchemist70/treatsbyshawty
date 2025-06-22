@@ -25,8 +25,25 @@ const router = express.Router();
 // Get all products
 router.get("/", async (req, res) => {
   try {
+    // Get all products
     const products = await Product.find();
-    res.json(products);
+    // For each product, fetch its reviews, rating, and numReviews
+    const productsWithReviews = await Promise.all(
+      products.map(async (product) => {
+        // Get latest 3 reviews for this product
+        const reviews = await Review.find({ product: product._id })
+          .sort({ createdAt: -1 })
+          .limit(3)
+          .populate("user", "name");
+        return {
+          ...product.toObject(),
+          reviews,
+          rating: product.rating,
+          numReviews: product.numReviews,
+        };
+      })
+    );
+    res.json(productsWithReviews);
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }

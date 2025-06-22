@@ -131,6 +131,52 @@ const Menu = () => {
             <div className="menu-product-details">
               <h2 className="menu-product-title">{product.name}</h2>
               <p className="menu-product-desc">{product.description}</p>
+              <div className="menu-product-rating">
+                {product.rating > 0 && (
+                  <span>
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <span
+                        key={star}
+                        className={
+                          star <= Math.round(product.rating)
+                            ? "star-filled"
+                            : "star-empty"
+                        }
+                        style={{
+                          color:
+                            star <= Math.round(product.rating)
+                              ? "#facc15"
+                              : "#d1d5db",
+                          fontSize: "1.2em",
+                        }}
+                      >
+                        ★
+                      </span>
+                    ))}
+                    <span
+                      style={{
+                        marginLeft: 6,
+                        fontSize: "0.95em",
+                        color: "#be185d",
+                      }}
+                    >
+                      ({product.numReviews})
+                    </span>
+                  </span>
+                )}
+              </div>
+              {product.reviews && product.reviews.length > 0 && (
+                <div className="menu-product-review">
+                  <span style={{ fontWeight: 500, color: "#be185d" }}>
+                    "{product.reviews[0].comment}"
+                  </span>
+                  <span
+                    style={{ fontSize: "0.95em", color: "#666", marginLeft: 4 }}
+                  >
+                    - {product.reviews[0].user?.name || "User"}
+                  </span>
+                </div>
+              )}
               <div className="menu-product-price">
                 ₦{product.price.toFixed(2)}
               </div>
