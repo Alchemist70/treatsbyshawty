@@ -24,7 +24,7 @@ services:
     startCommand: "" # This is the critical change to prevent npm start
     envVars:
       - key: REACT_APP_API_URL
-        value: https://treatsby-backend.onrender.com
+        value: https://treatsbyshawty.onrender.com
     routes:
       - type: rewrite
         source: /*
