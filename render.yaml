@@ -14,15 +14,17 @@ services:
       - key: NODE_ENV
         value: production
 
-  # Frontend Service (React Static Site)
-  - type: static_site
+  # Frontend Service (React)
+  - type: web
     name: treatsby-frontend
+    runtime: static
     rootDir: ./frontend
     buildCommand: npm install && npm run build
-    publishDir: ./build
+    staticPublishPath: ./build
+    startCommand: "" # This is the critical change to prevent npm start
     envVars:
       - key: REACT_APP_API_URL
-        value: https://treatsbyshawty.onrender.com # Manually set backend URL
+        value: https://treatsby-backend.onrender.com
     routes:
       - type: rewrite
         source: /*
