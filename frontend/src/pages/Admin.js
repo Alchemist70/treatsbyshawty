@@ -74,18 +74,13 @@ export default function Admin() {
     async function fetchStats() {
       try {
         const token = localStorage.getItem("token");
+        const config = { headers: { Authorization: `Bearer ${token}` } };
         const [ordersRes, productsRes] = await Promise.all([
-          fetch("/api/orders", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          fetch("/api/products", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
+          axios.get("/api/orders", config),
+          axios.get("/api/products", config),
         ]);
-        const ordersData = await ordersRes.json();
-        const productsData = await productsRes.json();
-        setOrders(Array.isArray(ordersData) ? ordersData : []);
-        setProducts(Array.isArray(productsData) ? productsData : []);
+        setOrders(Array.isArray(ordersRes.data) ? ordersRes.data : []);
+        setProducts(Array.isArray(productsRes.data) ? productsRes.data : []);
       } catch {
         setOrders([]);
         setProducts([]);
@@ -203,7 +198,7 @@ export default function Admin() {
     const formData = new FormData();
     formData.append("image", file);
     const token = localStorage.getItem("token");
-    const res = await axios.post("/api/upload", formData, {
+    const res = await axios.post("/api/product-showcase/upload", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
@@ -282,7 +277,7 @@ export default function Admin() {
     const formData = new FormData();
     formData.append("image", file);
     const token = localStorage.getItem("token");
-    const res = await axios.post("/api/upload", formData, {
+    const res = await axios.post("/api/testimonials/upload", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
@@ -641,14 +636,9 @@ export default function Admin() {
                             <td style={{ padding: 8 }}>
                               {item.image && (
                                 <img
-                                  src={item.image}
-                                  alt=""
-                                  style={{
-                                    width: 48,
-                                    height: 48,
-                                    objectFit: "cover",
-                                    borderRadius: 8,
-                                  }}
+                                  src={`${API_URL}/${item.image}`}
+                                  alt={item.title}
+                                  className="showcase-admin-image"
                                 />
                               )}
                             </td>
@@ -798,42 +788,32 @@ export default function Admin() {
                         </tr>
                       </thead>
                       <tbody>
-                        {testimonials.map((item) => (
-                          <tr
-                            key={item._id}
-                            style={{ borderBottom: "1px solid #f3f4f6" }}
-                          >
-                            <td style={{ padding: 8 }}>
-                              {item.image && (
+                        {testimonials.map((t) => (
+                          <tr key={t._id}>
+                            <td>
+                              {t.image && (
                                 <img
-                                  src={item.image}
-                                  alt=""
-                                  style={{
-                                    width: 48,
-                                    height: 48,
-                                    objectFit: "cover",
-                                    borderRadius: 8,
-                                  }}
+                                  src={`${API_URL}/${t.image}`}
+                                  alt={t.name}
+                                  className="testimonial-admin-image"
                                 />
                               )}
                             </td>
-                            <td style={{ padding: 8 }}>{item.name}</td>
-                            <td style={{ padding: 8 }}>{item.text}</td>
-                            <td style={{ padding: 8 }}>{item.order}</td>
-                            <td style={{ padding: 8 }}>
+                            <td>{t.name}</td>
+                            <td>{t.text}</td>
+                            <td>{t.order}</td>
+                            <td>
                               <button
                                 className="admin-tab"
                                 style={{ marginRight: 8 }}
-                                onClick={() => handleTestimonialEdit(item)}
+                                onClick={() => handleTestimonialEdit(t)}
                               >
                                 Edit
                               </button>
                               <button
                                 className="admin-tab"
                                 style={{ color: "#be185d" }}
-                                onClick={() =>
-                                  handleTestimonialDelete(item._id)
-                                }
+                                onClick={() => handleTestimonialDelete(t._id)}
                               >
                                 Delete
                               </button>

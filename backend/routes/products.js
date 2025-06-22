@@ -4,17 +4,17 @@ const Review = require("../models/Review");
 const auth = require("../middleware/auth");
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
 
-// Multer storage configuration
+// Multer storage for product images
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/");
+    const uploadPath = path.join(__dirname, "..", "uploads", "products");
+    fs.mkdirSync(uploadPath, { recursive: true });
+    cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    );
+    cb(null, `product-${Date.now()}${path.extname(file.originalname)}`);
   },
 });
 
@@ -132,11 +132,9 @@ router.post("/:id/reviews", auth, async (req, res) => {
     });
 
     if (alreadyReviewed) {
-      return res
-        .status(400)
-        .json({
-          message: "You have already reviewed this product for this order.",
-        });
+      return res.status(400).json({
+        message: "You have already reviewed this product for this order.",
+      });
     }
 
     // Create a new review document
@@ -163,6 +161,17 @@ router.post("/:id/reviews", auth, async (req, res) => {
     console.error(error);
     res.status(500).send("Server Error");
   }
+});
+
+// @route   POST api/products/upload
+// @desc    Upload a product image
+// @access  Private (Admin)
+router.post("/upload", auth, upload.single("image"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: "No file uploaded." });
+  }
+  const filePath = req.file.path.replace(/\\/g, "/").split("backend/")[1];
+  res.json({ url: filePath });
 });
 
 module.exports = router;

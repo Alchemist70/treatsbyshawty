@@ -475,3 +475,18 @@ export default function PreOrder() {
     </div>
   );
 }
+
+function ItemRow({ product, quantity, onQtyChange }) {
+  return (
+    <div className="preorder-item-row">
+      <img src={product.image} alt={product.name} />
+      <span className="item-name">{product.name}</span>
+      <span className="item-price">₦{product.price.toFixed(2)}</span>
+      <div className="item-qty-controls">
+        <button onClick={() => onQtyChange(product, -1)}>-</button>
+        <span>{quantity}</span>
+        <button onClick={() => onQtyChange(product, 1)}>+</button>
+      </div>
+    </div>
+  );
+}

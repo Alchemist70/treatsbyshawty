@@ -212,55 +212,43 @@ export default function AdminProducts() {
     setSavingProduct(true);
     try {
       const token = localStorage.getItem("token");
-      let res;
+      let imageUrl = form.image; // Keep existing URL by default
 
-      // Use FormData only if a file is being uploaded for a new product
-      if (!editingProduct && imageFile) {
+      // 1. If a new image file is provided, upload it first
+      if (imageFile) {
         const formData = new FormData();
-        Object.keys(form).forEach((key) => {
-          formData.append(key, form[key]);
-        });
         formData.append("image", imageFile);
-
-        res = await axios.post("/api/products", formData, {
+        const uploadRes = await axios.post("/api/products/upload", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
         });
-      } else {
-        // For editing or for new products using a URL, use JSON
-        const payload = { ...form };
-        if (editingProduct) {
-          res = await axios.put(
-            `/api/products/${editingProduct._id}`,
-            payload,
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-        } else {
-          res = await axios.post("/api/products", payload, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          });
-        }
+        imageUrl = uploadRes.data.url;
       }
 
-      const { data } = res;
-      if (!res.status || res.status < 200 || res.status >= 300)
-        throw new Error(data.message || "Failed to save product");
+      // 2. Create or update the product with the final image URL
+      const payload = { ...form, image: imageUrl };
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      if (editingProduct) {
+        await axios.put(`/api/products/${editingProduct._id}`, payload, config);
+      } else {
+        await axios.post("/api/products", payload, config);
+      }
 
       setShowProductForm(false);
       setEditingProduct(null);
-      fetchProducts();
+      fetchProducts(); // Refresh product list
     } catch (err) {
-      alert(err.response?.data?.message || err.message);
+      alert(
+        `Failed to save product: ${err.response?.data?.message || err.message}`
+      );
     } finally {
       setSavingProduct(false);
     }

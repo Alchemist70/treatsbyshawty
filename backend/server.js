@@ -11,12 +11,12 @@ dotenv.config();
 
 const app = express();
 
-// Use CORS - This will allow all origins.
-app.use(cors());
+// Middleware
 app.use(express.json());
+app.use(cors());
 app.use(cookieParser());
 
-// Serve uploaded files statically
+// Serve static files from the 'uploads' directory
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Health check route
@@ -34,6 +34,10 @@ app.use("/api/orders", require("./routes/orders"));
 app.use("/api/preorders", require("./routes/preorders"));
 app.use("/api/delivery", require("./routes/delivery"));
 app.use("/api/reviews", require("./routes/reviews"));
+app.use("/api/website-feedback", require("./routes/websiteFeedback"));
+app.use("/api/home-content", require("./routes/homeContent"));
+app.use("/api/product-showcase", require("./routes/productShowcase"));
+app.use("/api/testimonials", require("./routes/testimonials"));
 app.use("/api/cart", require("./routes/cart"));
 app.use("/api", require("./routes/index"));
 
