@@ -1,7 +1,8 @@
 const express = require("express");
-const cors = require("cors");
+const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const path = require("path");
+const cors = require("cors");
 const connectDB = require("./config/db");
 const cookieParser = require("cookie-parser");
 
@@ -10,8 +11,23 @@ dotenv.config();
 
 const app = express();
 
+// CORS configuration
+const whitelist = [
+  "http://localhost:3000",
+  "https://treatsbyshawty.onrender.com",
+];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
