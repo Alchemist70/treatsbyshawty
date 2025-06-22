@@ -61,7 +61,7 @@ router.post(
       if (customOrder) {
         customOrderObj = JSON.parse(customOrder);
         if (req.files && req.files.customImage) {
-          customOrderObj.image = req.files.customImage[0].path;
+          customOrderObj.image = `uploads/preorders/${req.files.customImage[0].filename}`;
         }
       }
 
@@ -83,7 +83,7 @@ router.post(
         }
       } else if (paymentMethod === "Bank Transfer") {
         if (req.files && req.files.receipt) {
-          depositReceipt = req.files.receipt[0].path;
+          depositReceipt = `uploads/receipts/${req.files.receipt[0].filename}`;
         } else {
           return res
             .status(400)

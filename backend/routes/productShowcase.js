@@ -27,7 +27,7 @@ router.post("/upload", auth, upload.single("image"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: "No file uploaded." });
   }
-  const filePath = req.file.path.replace(/\\/g, "/").split("backend/")[1];
+  const filePath = `uploads/showcase/${req.file.filename}`;
   res.json({ url: filePath });
 });
 

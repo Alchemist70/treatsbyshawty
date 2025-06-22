@@ -28,7 +28,7 @@ router.post("/upload", auth, upload.single("image"), (req, res) => {
     return res.status(400).json({ message: "No file uploaded." });
   }
   // Return the web-accessible path
-  const filePath = req.file.path.replace(/\\/g, "/").split("backend/")[1];
+  const filePath = `uploads/testimonials/${req.file.filename}`;
   res.json({ url: filePath });
 });
 

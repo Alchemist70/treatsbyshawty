@@ -302,9 +302,7 @@ router.post(
       if (order.user.toString() !== req.user.id.toString()) {
         return res.status(403).json({ message: "Not authorized" });
       }
-      order.paymentReceipt = req.file.path
-        .replace(/\\/g, "/")
-        .split("backend/")[1];
+      order.paymentReceipt = `uploads/receipts/${req.file.filename}`;
       order.paymentResult = {
         status: "Receipt uploaded. Pending verification.",
       };

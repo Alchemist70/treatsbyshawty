@@ -3,6 +3,7 @@ import axios from "axios";
 import "../css/Home.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import { API_URL } from "../config";
 
 const menuCategories = [
   {
@@ -339,7 +340,7 @@ export default function Home() {
             <div key={item._id || index} className="product-card">
               {item.image && (
                 <img
-                  src={item.image}
+                  src={`${API_URL}/${item.image}`}
                   alt={item.title}
                   className="product-image"
                 />
@@ -372,7 +373,9 @@ export default function Home() {
               <div key={testimonial._id} className="home-testimonial-card">
                 <div className="home-testimonial-quote-icon">”</div>
                 <img
-                  src={testimonial.image || "/placeholder-avatar.png"}
+                  src={`${API_URL}/${
+                    testimonial.image || "/placeholder-avatar.png"
+                  }`}
                   alt={testimonial.name}
                   className="home-testimonial-avatar"
                 />

@@ -454,3 +454,12 @@ textarea.admin-input:focus {
     font-size: 1.2rem;
   }
 }
+
+.testimonial-admin-image,
+.showcase-admin-image {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  vertical-align: middle;
+}
