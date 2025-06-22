@@ -3,7 +3,7 @@ import "../css/Admin.css";
 import "../css/AdminOrders.css";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { API_URL } from "../../config";
+import { API_URL } from "../config";
 
 function StatusModal({ order, onSave, onClose, loading }) {
   // Only allow valid next statuses

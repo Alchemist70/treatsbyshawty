@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../css/Admin.css";
 import "../css/AdminPreOrders.css";
 import axios from "axios";
-import { API_URL } from "../../config";
+import { API_URL } from "../config";
 
 const STATUS_OPTIONS = [
   "pending",
