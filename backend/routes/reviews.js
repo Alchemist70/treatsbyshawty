@@ -17,11 +17,40 @@ function isAdmin(req, res, next) {
 // @access  Private (Admin)
 router.get("/all", auth, isAdmin, async (req, res) => {
   try {
+    // Get all reviews, populate user and order (with items.product)
     const reviews = await Review.find()
       .populate("user", "name email")
-      .populate("product", "name")
+      .populate({
+        path: "order",
+        select: "items",
+        populate: { path: "items.product", select: "name" },
+      })
       .sort({ createdAt: -1 });
-    res.json(reviews);
+
+    // For each review, extract the product name(s) from the order's items
+    const reviewsWithProduct = reviews.map((review) => {
+      let productNames = [];
+      if (review.order && review.order.items && review.order.items.length > 0) {
+        // If only one product per order, just use the first
+        if (review.order.items.length === 1) {
+          const prod = review.order.items[0].product;
+          productNames = [prod && prod.name ? prod.name : "Unknown Product"];
+        } else {
+          // If multiple products, try to match by review.comment mentioning product, else list all
+          productNames = review.order.items
+            .map((item) =>
+              item.product && item.product.name ? item.product.name : null
+            )
+            .filter(Boolean);
+        }
+      }
+      return {
+        ...review.toObject(),
+        productNames,
+      };
+    });
+
+    res.json(reviewsWithProduct);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
