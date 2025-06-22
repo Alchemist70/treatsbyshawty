@@ -11,23 +11,8 @@ dotenv.config();
 
 const app = express();
 
-// CORS configuration
-const whitelist = [
-  "http://localhost:3000",
-  "https://treatsbyshawty.onrender.com",
-];
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-};
-
-// Middleware
-app.use(cors(corsOptions));
+// Use CORS - This will allow all origins.
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
