@@ -141,6 +141,20 @@ router.post("/:id/reviews", auth, async (req, res) => {
       return res.status(404).json({ message: "Product not found." });
     }
 
+    const order = await require("../models/Order").findById(orderId);
+    if (!order) {
+      return res.status(404).json({ message: "Order not found." });
+    }
+    // Ensure the order contains the product
+    const orderedProduct = order.items.find(
+      (item) => item.product.toString() === productId
+    );
+    if (!orderedProduct) {
+      return res
+        .status(400)
+        .json({ message: "This product is not in the specified order." });
+    }
+
     // Check if the user has already reviewed this product for this specific order
     const alreadyReviewed = await Review.findOne({
       product: productId,
@@ -152,6 +166,14 @@ router.post("/:id/reviews", auth, async (req, res) => {
       return res.status(400).json({
         message: "You have already reviewed this product for this order.",
       });
+    }
+
+    // Fetch user name if not present in req.user
+    let userName = req.user.name;
+    if (!userName) {
+      const User = require("../models/User");
+      const userDoc = await User.findById(req.user.id);
+      userName = userDoc ? userDoc.name : "User";
     }
 
     // Create a new review document
@@ -168,7 +190,7 @@ router.post("/:id/reviews", auth, async (req, res) => {
     // Push the review into the product's embedded reviews array
     product.reviews.push({
       user: req.user.id,
-      name: req.user.name || "User", // fallback if name is not available
+      name: userName,
       rating: Number(rating),
       comment,
       createdAt: new Date(),
