@@ -88,37 +88,60 @@ const AdminFeedback = () => {
           {filteredFeedbacks.length === 0 ? (
             <p>No feedbacks to display.</p>
           ) : (
-            filteredFeedbacks.map((fb) => (
-              <div key={fb._id} className="feedback-card">
-                <div className="feedback-card-header">
-                  <span
-                    className={`feedback-type ${fb.type
-                      .toLowerCase()
-                      .replace(" ", "-")}`}
-                  >
-                    {fb.type}
-                  </span>
-                  <span className="feedback-rating">
-                    {Array(fb.rating).fill("★").join("")}
-                    {Array(5 - fb.rating)
-                      .fill("☆")
-                      .join("")}
-                  </span>
+            filteredFeedbacks.map((fb) => {
+              let itemName = "";
+              if (fb.type === "Website Order") {
+                itemName = fb.product?.name || "";
+              } else if (fb.type === "Pre-Order") {
+                if (fb.preOrder?.items && fb.preOrder.items.length > 0) {
+                  const firstItem = fb.preOrder.items[0];
+                  itemName = firstItem.product?.name || firstItem.name || "";
+                } else if (
+                  fb.preOrder?.customOrder &&
+                  fb.preOrder.customOrder.description
+                ) {
+                  itemName = fb.preOrder.customOrder.description;
+                } else {
+                  itemName = fb.preOrder?.eventType || "";
+                }
+              }
+              return (
+                <div key={fb._id} className="feedback-card">
+                  <div className="feedback-card-header">
+                    <span
+                      className={`feedback-type ${fb.type
+                        .toLowerCase()
+                        .replace(" ", "-")}`}
+                    >
+                      {fb.type}
+                    </span>
+                    <span className="feedback-rating">
+                      {Array(fb.rating).fill("★").join("")}
+                      {Array(5 - fb.rating)
+                        .fill("☆")
+                        .join("")}
+                    </span>
+                  </div>
+                  {itemName && (
+                    <div className="feedback-item-name">
+                      <strong>Item:</strong> {itemName}
+                    </div>
+                  )}
+                  <p className="feedback-comment">
+                    {fb.comment || "No comment provided."}
+                  </p>
+                  <div className="feedback-card-footer">
+                    <span className="feedback-user">
+                      by <strong>{fb.user?.name || "Unknown User"}</strong> (
+                      {fb.user?.email || "No email"})
+                    </span>
+                    <span className="feedback-date">
+                      {new Date(fb.createdAt).toLocaleString()}
+                    </span>
+                  </div>
                 </div>
-                <p className="feedback-comment">
-                  {fb.comment || "No comment provided."}
-                </p>
-                <div className="feedback-card-footer">
-                  <span className="feedback-user">
-                    by <strong>{fb.user?.name || "Unknown User"}</strong> (
-                    {fb.user?.email || "No email"})
-                  </span>
-                  <span className="feedback-date">
-                    {new Date(fb.createdAt).toLocaleString()}
-                  </span>
-                </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
       )}

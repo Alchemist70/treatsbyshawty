@@ -163,6 +163,7 @@ export default function MyOrders() {
   const [error, setError] = useState("");
   const [reviewingProduct, setReviewingProduct] = useState(null);
   const [feedbackPreOrder, setFeedbackPreOrder] = useState(null);
+  const [userReviews, setUserReviews] = useState([]);
 
   const fetchOrders = async () => {
     setLoading(true);
@@ -186,8 +187,19 @@ export default function MyOrders() {
     }
   };
 
+  const fetchUserReviews = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get("/api/reviews/my", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUserReviews(res.data);
+    } catch {}
+  };
+
   useEffect(() => {
     fetchOrders();
+    fetchUserReviews();
   }, []);
 
   const handleCancelOrder = async (orderId) => {
@@ -268,40 +280,68 @@ export default function MyOrders() {
                       <div className="order-items-container">
                         <h4>Items in this order:</h4>
                         <ul>
-                          {order.items.map((item) => (
-                            <li key={item.product?._id || item._id}>
-                              <div className="item-details">
-                                {(item.image || item.product?.image) && (
-                                  <img
-                                    src={item.image || item.product.image}
-                                    alt={item.name || item.product?.name}
-                                    className="item-image"
-                                  />
+                          {order.items.map((item) => {
+                            const review = userReviews.find(
+                              (r) =>
+                                r.product === (item.product?._id || item._id) &&
+                                r.order === order._id
+                            );
+                            return (
+                              <li key={item.product?._id || item._id}>
+                                <div className="item-details">
+                                  {(item.image || item.product?.image) && (
+                                    <img
+                                      src={item.image || item.product.image}
+                                      alt={item.name || item.product?.name}
+                                      className="item-image"
+                                    />
+                                  )}
+                                  <span>
+                                    {item.name || item.product?.name} x{" "}
+                                    {item.quantity}
+                                  </span>
+                                </div>
+                                {review && (
+                                  <div className="item-review-display">
+                                    <span className="star-rating">
+                                      {[1, 2, 3, 4, 5].map((star) => (
+                                        <span
+                                          key={star}
+                                          className={
+                                            star <= review.rating
+                                              ? "star-filled"
+                                              : "star-empty"
+                                          }
+                                        >
+                                          ★
+                                        </span>
+                                      ))}
+                                    </span>
+                                    <span className="item-review-comment">
+                                      "{review.comment}"
+                                    </span>
+                                  </div>
                                 )}
-                                <span>
-                                  {item.name || item.product?.name} x{" "}
-                                  {item.quantity}
-                                </span>
-                              </div>
-                              {!["pending", "cancelled"].includes(
-                                order.status
-                              ) && (
-                                <button
-                                  className="review-btn"
-                                  onClick={() =>
-                                    setReviewingProduct({
-                                      product: item.product
-                                        ? item.product
-                                        : item,
-                                      orderId: order._id,
-                                    })
-                                  }
-                                >
-                                  Leave a Review
-                                </button>
-                              )}
-                            </li>
-                          ))}
+                                {!["pending", "cancelled"].includes(
+                                  order.status
+                                ) && (
+                                  <button
+                                    className="review-btn"
+                                    onClick={() =>
+                                      setReviewingProduct({
+                                        product: item.product
+                                          ? item.product
+                                          : item,
+                                        orderId: order._id,
+                                      })
+                                    }
+                                  >
+                                    Leave a Review
+                                  </button>
+                                )}
+                              </li>
+                            );
+                          })}
                         </ul>
                       </div>
                     )}

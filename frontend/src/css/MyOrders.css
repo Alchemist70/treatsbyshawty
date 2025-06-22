@@ -291,19 +291,29 @@
 }
 
 .star-rating {
-  display: flex;
-  gap: 0.25rem;
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  cursor: pointer;
+  display: inline-block;
+  font-size: 1.1em;
 }
 
-.star-rating .star-filled {
+.star-filled {
   color: #facc15;
 }
 
-.star-rating .star-empty {
+.star-empty {
   color: #d1d5db;
+}
+
+.item-review-display {
+  margin: 4px 0 0 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.item-review-comment {
+  font-style: italic;
+  color: #be185d;
+  font-size: 1em;
 }
 
 .modal .admin-form textarea {

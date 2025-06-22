@@ -19,7 +19,23 @@ router.get("/all", auth, isAdmin, async (req, res) => {
   try {
     const reviews = await Review.find()
       .populate("user", "name email")
+      .populate("product", "name")
       .sort({ createdAt: -1 });
+    res.json(reviews);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// @route   GET /api/reviews/my
+// @desc    Get all reviews by the current user
+// @access  Private
+router.get("/my", auth, async (req, res) => {
+  try {
+    const reviews = await Review.find({ user: req.user.id })
+      .select("product order rating comment createdAt")
+      .lean();
     res.json(reviews);
   } catch (err) {
     console.error(err);

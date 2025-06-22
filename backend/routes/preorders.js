@@ -215,7 +215,8 @@ router.get("/feedback/all", auth, isAdmin, async (req, res) => {
       .populate("user", "name email")
       .populate({
         path: "preOrder",
-        select: "eventType",
+        select: "eventType items customOrder",
+        populate: { path: "items.product", select: "name" },
       })
       .sort({ createdAt: -1 });
     res.json(feedbacks);

@@ -170,11 +170,6 @@ const Menu = () => {
                   <span style={{ fontWeight: 500, color: "#be185d" }}>
                     "{product.reviews[0].comment}"
                   </span>
-                  <span
-                    style={{ fontSize: "0.95em", color: "#666", marginLeft: 4 }}
-                  >
-                    - {product.reviews[0].user?.name || "User"}
-                  </span>
                 </div>
               )}
               <div className="menu-product-price">
