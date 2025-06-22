@@ -21,7 +21,8 @@ html {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 1rem 1.5rem;
 }
 
@@ -327,16 +328,17 @@ html {
   padding: 0.5rem;
   transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(190, 24, 93, 0.1);
+  width: 180px;
 }
 
 .header-search-input {
   border: none;
   outline: none;
   background: transparent;
-  padding: 0.5rem 1rem;
-  font-size: 0.95rem;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.9rem;
   color: #374151;
-  width: 200px;
+  width: 100px;
   font-family: "Inter", sans-serif;
 }
 
