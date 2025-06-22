@@ -77,6 +77,16 @@ export default function Payment() {
       localStorage.removeItem("cartItems");
       window.dispatchEvent(new Event("cart-updated"));
 
+      // Also clear the cart on the server
+      try {
+        await axios.delete("/api/cart", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } catch (cartClearError) {
+        // Log this error but don't block the user flow
+        console.error("Failed to clear server-side cart:", cartClearError);
+      }
+
       const orderSummary = {
         ...location.state,
         orderId: newOrder._id,

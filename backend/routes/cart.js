@@ -74,6 +74,21 @@ router.put("/", auth, async (req, res) => {
   }
 });
 
+// @route   DELETE api/cart
+// @desc    Clear entire cart
+// @access  Private
+router.delete("/", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    user.cart = [];
+    await user.save();
+    res.json(user.cart);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Server Error");
+  }
+});
+
 // @route   DELETE api/cart/:productId
 // @desc    Remove item from cart
 // @access  Private
