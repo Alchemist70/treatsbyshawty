@@ -273,9 +273,9 @@ html {
   visibility: visible;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 600px) {
   .header-content {
-    padding: 0.6rem 0.8rem; /* Further reduced padding for mobile */
+    padding: 0.5rem 0.6rem; /* Further reduced padding for mobile */
   }
 
   .desktop-nav {
@@ -296,12 +296,12 @@ html {
 
   /* Mobile Logo Adjustments */
   .logo {
-    font-size: 1.4rem; /* Adjusted for smaller screens */
+    font-size: 1.2rem; /* Adjusted for smaller screens */
     margin-left: 0;
   }
 
   .logo-icon {
-    font-size: 1.6rem; /* Adjusted for smaller screens */
+    font-size: 1.4rem; /* Adjusted for smaller screens */
   }
 }
 
