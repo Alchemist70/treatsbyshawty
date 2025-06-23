@@ -689,7 +689,11 @@ export default function Admin() {
                             <td style={{ padding: 8 }}>
                               {item.image && (
                                 <img
-                                  src={`${API_URL}/${item.image}`}
+                                  src={
+                                    item.image.startsWith("http")
+                                      ? item.image
+                                      : `${API_URL}/${item.image}`
+                                  }
                                   alt={item.title}
                                   className="showcase-admin-image"
                                 />
@@ -876,7 +880,11 @@ export default function Admin() {
                             <td>
                               {t.image && (
                                 <img
-                                  src={`${API_URL}/${t.image}`}
+                                  src={
+                                    t.image.startsWith("http")
+                                      ? t.image
+                                      : `${API_URL}/${t.image}`
+                                  }
                                   alt={t.name}
                                   className="testimonial-admin-image"
                                 />
