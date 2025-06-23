@@ -338,12 +338,28 @@ export default function Home() {
         ) : (
           showcase.map((item, index) => (
             <div key={item._id || index} className="product-card">
-              {item.image && (
+              {testimonials[index] && testimonials[index].image ? (
                 <img
-                  src={`${API_URL}/${item.image}`}
+                  src={
+                    testimonials[index].image.startsWith("http")
+                      ? testimonials[index].image
+                      : `${API_URL}/${testimonials[index].image}`
+                  }
                   alt={item.title}
                   className="product-image"
                 />
+              ) : (
+                item.image && (
+                  <img
+                    src={
+                      item.image.startsWith("http")
+                        ? item.image
+                        : `${API_URL}/${item.image}`
+                    }
+                    alt={item.title}
+                    className="product-image"
+                  />
+                )
               )}
               <h2 className="product-title">{item.title}</h2>
               <p className="product-description">
@@ -369,18 +385,23 @@ export default function Home() {
           <div className="error-state">{testimonialsError}</div>
         ) : (
           <div className="home-testimonials-grid">
-            {testimonials.map((testimonial) => (
-              <div key={testimonial._id} className="home-testimonial-card">
+            {showcase.map((item, index) => (
+              <div key={item._id || index} className="home-testimonial-card">
                 <div className="home-testimonial-quote-icon">”</div>
                 <img
-                  src={`${API_URL}/${
-                    testimonial.image || "/placeholder-avatar.png"
-                  }`}
-                  alt={testimonial.name}
+                  src={
+                    item.image &&
+                    (item.image.startsWith("http")
+                      ? item.image
+                      : `${API_URL}/${item.image}`)
+                  }
+                  alt={item.title}
                   className="home-testimonial-avatar"
                 />
-                <p className="home-testimonial-text">"{testimonial.text}"</p>
-                <p className="home-testimonial-author">- {testimonial.name}</p>
+                <p className="home-testimonial-text">
+                  "{item.subtitle || item.description || item.title}"
+                </p>
+                <p className="home-testimonial-author">- {item.title}</p>
               </div>
             ))}
           </div>
