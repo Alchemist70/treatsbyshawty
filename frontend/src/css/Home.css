@@ -590,7 +590,7 @@ html {
 
 .marquee-content {
   display: inline-block;
-  animation: marquee-scroll 20s linear infinite;
+  animation: marquee-scroll 30s linear infinite;
   padding-left: 100%;
 }
 

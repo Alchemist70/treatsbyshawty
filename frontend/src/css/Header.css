@@ -714,18 +714,6 @@ span:hover {
     display: none;
   }
 
-  .header-dropdowns-bar {
-    display: none;
-  }
-
-  .marquee-container {
-    top: 60px; /* Adjust based on mobile header height */
-  }
-
-  body {
-    padding-top: 100px; /* Adjust based on mobile header + marquee height */
-  }
-
   .header-search {
     display: none;
   }
