@@ -1,7 +1,7 @@
 services:
   # Backend Service (Node.js)
   - type: web
-    name: treatsby-backend
+    name: treatsbyshawty-backend
     runtime: node
     rootDir: ./backend
     buildCommand: npm install
