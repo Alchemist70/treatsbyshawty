@@ -7,6 +7,12 @@ const Marquee = () => {
       <span>Free delivery on orders over ₦25,000! ✨</span>
       <span>Freshly baked goods daily! 🥐</span>
       <span>Follow us on Instagram @TreatsByShawty! 💖</span>
+      <span>Free delivery on orders over ₦25,000! ✨</span>
+      <span>Freshly baked goods daily! 🥐</span>
+      <span>Follow us on Instagram @TreatsByShawty! 💖</span>
+      <span>Free delivery on orders over ₦25,000! ✨</span>
+      <span>Freshly baked goods daily! 🥐</span>
+      <span>Follow us on Instagram @TreatsByShawty! 💖</span>
     </>
   );
 
