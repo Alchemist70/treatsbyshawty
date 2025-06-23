@@ -737,9 +737,9 @@ span:hover {
 
 .marquee-container {
   position: fixed;
-  top: 113px;
+  top: 96px;
   left: 0;
-  width: 100vw;
+  width: 100%;
   z-index: 1000;
   background-color: #fdf2f8;
   color: #be185d;
