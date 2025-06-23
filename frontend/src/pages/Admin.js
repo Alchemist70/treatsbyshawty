@@ -262,6 +262,15 @@ export default function Admin() {
   function handleShowcaseEdit(item) {
     setShowcaseForm({ ...item });
     if (showcaseImageRef.current) showcaseImageRef.current.value = "";
+    // Set image source radio based on image value
+    if (
+      item.image &&
+      (item.image.startsWith("http://") || item.image.startsWith("https://"))
+    ) {
+      setShowcaseImageSource("url");
+    } else {
+      setShowcaseImageSource("upload");
+    }
   }
   async function handleShowcaseDelete(id) {
     if (!window.confirm("Delete this showcase item?")) return;
@@ -348,6 +357,15 @@ export default function Admin() {
   function handleTestimonialEdit(item) {
     setTestimonialForm({ ...item });
     if (testimonialImageRef.current) testimonialImageRef.current.value = "";
+    // Set image source radio based on image value
+    if (
+      item.image &&
+      (item.image.startsWith("http://") || item.image.startsWith("https://"))
+    ) {
+      setTestimonialImageSource("url");
+    } else {
+      setTestimonialImageSource("upload");
+    }
   }
   async function handleTestimonialDelete(id) {
     if (!window.confirm("Delete this testimonial?")) return;
