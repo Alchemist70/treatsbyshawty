@@ -329,6 +329,19 @@ export default function Home() {
       <div className="section-divider" />
       {/* Product Showcase */}
       <section className="products-grid">
+        <h2
+          className="products-section-title"
+          style={{
+            textAlign: "center",
+            color: "#be185d",
+            fontFamily: "Dancing Script, cursive",
+            fontSize: "2.2rem",
+            fontWeight: 700,
+            marginBottom: 18,
+          }}
+        >
+          Explore Our Products
+        </h2>
         {showcaseLoading ? (
           <div className="loading-state">Loading Product Showcase...</div>
         ) : showcaseError ? (
@@ -338,28 +351,16 @@ export default function Home() {
         ) : (
           showcase.map((item, index) => (
             <div key={item._id || index} className="product-card">
-              {testimonials[index] && testimonials[index].image ? (
+              {item.image && (
                 <img
                   src={
-                    testimonials[index].image.startsWith("http")
-                      ? testimonials[index].image
-                      : `${API_URL}/${testimonials[index].image}`
+                    item.image.startsWith("http")
+                      ? item.image
+                      : `${API_URL}/${item.image}`
                   }
                   alt={item.title}
                   className="product-image"
                 />
-              ) : (
-                item.image && (
-                  <img
-                    src={
-                      item.image.startsWith("http")
-                        ? item.image
-                        : `${API_URL}/${item.image}`
-                    }
-                    alt={item.title}
-                    className="product-image"
-                  />
-                )
               )}
               <h2 className="product-title">{item.title}</h2>
               <p className="product-description">
@@ -384,23 +385,22 @@ export default function Home() {
           <div className="error-state">{testimonialsError}</div>
         ) : (
           <div className="home-testimonials-grid">
-            {showcase.map((item, index) => (
-              <div key={item._id || index} className="home-testimonial-card">
+            {testimonials.map((testimonial) => (
+              <div key={testimonial._id} className="home-testimonial-card">
                 <div className="home-testimonial-quote-icon">”</div>
                 <img
                   src={
-                    item.image &&
-                    (item.image.startsWith("http")
-                      ? item.image
-                      : `${API_URL}/${item.image}`)
+                    (testimonial.image &&
+                      (testimonial.image.startsWith("http")
+                        ? testimonial.image
+                        : `${API_URL}/${testimonial.image}`)) ||
+                    "/placeholder-avatar.png"
                   }
-                  alt={item.title}
+                  alt={testimonial.name}
                   className="home-testimonial-avatar"
                 />
-                <p className="home-testimonial-text">
-                  "{item.subtitle || item.description || item.title}"
-                </p>
-                <p className="home-testimonial-author">- {item.title}</p>
+                <p className="home-testimonial-text">"{testimonial.text}"</p>
+                <p className="home-testimonial-author">- {testimonial.name}</p>
               </div>
             ))}
           </div>
