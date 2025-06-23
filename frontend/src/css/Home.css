@@ -299,6 +299,12 @@
 }
 
 /* Enhanced Products Grid */
+.products-section-title {
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
+  display: block;
+}
+
 .products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -306,6 +312,8 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
+  margin-top: 0;
+  margin-bottom: 3rem;
 }
 
 .product-card {
@@ -318,6 +326,7 @@
   text-align: center;
   position: relative;
   overflow: hidden;
+  margin-bottom: 2.5rem;
 }
 
 .product-card::before {
