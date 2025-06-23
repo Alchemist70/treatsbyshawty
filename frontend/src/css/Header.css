@@ -532,6 +532,7 @@ html {
 @media (max-width: 600px) {
   .header-dropdowns-bar {
     padding: 0.3rem 0; /* Further reduced */
+    top: 50px;
   }
 
   .header-dropdowns-container {
