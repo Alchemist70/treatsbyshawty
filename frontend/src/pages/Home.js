@@ -328,20 +328,21 @@ export default function Home() {
       </section>
       <div className="section-divider" />
       {/* Product Showcase */}
+      <h2
+        className="products-section-title"
+        style={{
+          textAlign: "center",
+          color: "#be185d",
+          fontFamily: "Dancing Script, cursive",
+          fontSize: "2.2rem",
+          fontWeight: 700,
+          marginTop: "2.5rem",
+          marginBottom: "2.5rem",
+        }}
+      >
+        Explore Our Products
+      </h2>
       <section className="products-grid">
-        <h2
-          className="products-section-title"
-          style={{
-            textAlign: "center",
-            color: "#be185d",
-            fontFamily: "Dancing Script, cursive",
-            fontSize: "2.2rem",
-            fontWeight: 700,
-            marginBottom: 18,
-          }}
-        >
-          Explore Our Products
-        </h2>
         {showcaseLoading ? (
           <div className="loading-state">Loading Product Showcase...</div>
         ) : showcaseError ? (
