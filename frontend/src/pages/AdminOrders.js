@@ -185,9 +185,11 @@ export default function AdminOrders() {
                     </td>
                     <td>
                       <div className="order-receipt">
-                        {order.paymentReceipt ? (
+                        {order.paymentReceipt || order.receipt ? (
                           <a
-                            href={`${API_URL}/${order.paymentReceipt}`}
+                            href={`${API_URL}/${
+                              order.paymentReceipt || order.receipt
+                            }`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="receipt-link"
