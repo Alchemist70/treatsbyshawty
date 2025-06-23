@@ -552,6 +552,9 @@ html {
   .header-dropdown-content {
     min-width: 140px; /* Further reduced min-width */
   }
+  .marquee-content {
+    animation: marquee 40s linear infinite;
+  }
 }
 
 .header-profile-area {
