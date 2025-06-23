@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useLocation, Navigate } from "react-router-dom";
 import "../css/Menu.css";
@@ -11,6 +11,7 @@ const Menu = () => {
   const [justAdded, setJustAdded] = useState(null);
   const [redirectToLogin, setRedirectToLogin] = useState(false);
   const [selected, setSelected] = useState("All");
+  const productRefs = useRef({});
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -26,6 +27,34 @@ const Menu = () => {
     };
     fetchProducts();
   }, [location]);
+
+  // Set selected category from URL query param
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const cat = params.get("category");
+    if (cat) {
+      // Capitalize first letter for match
+      const formatted =
+        cat.charAt(0).toUpperCase() + cat.slice(1).toLowerCase();
+      setSelected(formatted);
+    } else {
+      setSelected("All");
+    }
+  }, [location]);
+
+  // Scroll to item if present in query after filtering
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const item = params.get("item");
+    if (item && productRefs.current[item.toLowerCase()]) {
+      setTimeout(() => {
+        productRefs.current[item.toLowerCase()].scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }, 200);
+    }
+  }, [products, location]);
 
   const handleAddToCart = (product) => {
     if (!localStorage.getItem("token")) {
@@ -122,7 +151,13 @@ const Menu = () => {
 
       <div className="menu-products-grid">
         {filteredProducts.map((product) => (
-          <div key={product._id} className="menu-product-card">
+          <div
+            key={product._id}
+            className="menu-product-card"
+            ref={(el) => {
+              if (el) productRefs.current[product.name.toLowerCase()] = el;
+            }}
+          >
             <img
               src={product.image}
               alt={product.name}

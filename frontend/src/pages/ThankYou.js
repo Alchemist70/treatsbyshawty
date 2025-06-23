@@ -31,15 +31,20 @@ function ThankYou() {
 
     try {
       const token = localStorage.getItem("token");
-      const url = isPreOrder
-        ? `/api/preorders/${orderId}/feedback`
-        : `/api/orders/${orderId}/feedback`;
+      let url;
+      let payload;
 
-      await axios.post(
-        url,
-        { rating, comment },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      if (isPreOrder) {
+        url = `/api/preorders/${orderId}/feedback`;
+        payload = { rating, comment };
+      } else {
+        url = `/api/website-feedback`;
+        payload = { orderId, rating, comment };
+      }
+
+      await axios.post(url, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setFeedbackSuccess("Thank you for your feedback!");
     } catch (err) {
       setFeedbackError(

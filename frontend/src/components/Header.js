@@ -59,6 +59,14 @@ function HeaderDropdowns() {
     navigate(`/menu?category=${label.toLowerCase()}`);
   };
 
+  const handleItemClick = (catLabel, item) => {
+    navigate(
+      `/menu?category=${catLabel.toLowerCase()}&item=${encodeURIComponent(
+        item.toLowerCase()
+      )}`
+    );
+  };
+
   return (
     <div className="header-dropdowns-bar">
       <div className="header-dropdowns-container">
@@ -78,13 +86,18 @@ function HeaderDropdowns() {
             <div className="header-dropdown-content">
               <div className="category-items">
                 {cat.options.map((option) => (
-                  <Link
+                  <div
                     key={option}
-                    to={`/menu?category=${cat.label.toLowerCase()}`}
                     className="category-item"
+                    onClick={() => handleItemClick(cat.label, option)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyPress={(e) =>
+                      e.key === "Enter" && handleItemClick(cat.label, option)
+                    }
                   >
                     {option}
-                  </Link>
+                  </div>
                 ))}
               </div>
             </div>

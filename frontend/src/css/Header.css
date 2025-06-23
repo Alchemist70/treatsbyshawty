@@ -8,14 +8,15 @@ html {
 
 /* Header Styles */
 .site-header {
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 1000;
+  left: 0;
+  width: 100vw;
+  z-index: 1002;
   background: rgba(250, 175, 175, 0.98);
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 20px rgba(190, 24, 93, 0.08);
   border-bottom: 1px solid rgba(190, 24, 93, 0.1);
-  width: 100%;
 }
 
 .header-content {
@@ -381,13 +382,15 @@ html {
 
 /* Enhanced Category Hover Section - Reduced Height */
 .header-dropdowns-bar {
+  position: fixed;
+  top: 73px;
+  left: 0;
+  width: 100vw;
+  z-index: 1001;
   background: linear-gradient(135deg, #f5bada 0%, #fce7f3 100%);
   border-bottom: 1px solid #fbb6ce;
-  padding: 0.4rem 0; /* Slightly reduced padding */
+  padding: 0.4rem 0;
   box-shadow: 0 2px 8px rgba(190, 24, 93, 0.05);
-  position: sticky;
-  top: 72px; /* Sticking below the main header (approx height) */
-  z-index: 49;
 }
 
 .header-dropdowns-container {
@@ -710,4 +713,23 @@ span:hover {
   .desktop-nav {
     display: none;
   }
+}
+
+.marquee-container {
+  position: fixed;
+  top: 113px;
+  left: 0;
+  width: 100vw;
+  z-index: 1000;
+  background-color: #fdf2f8;
+  color: #be185d;
+  padding: 0.75rem 0;
+  overflow: hidden;
+  white-space: nowrap;
+  border-bottom: 1px solid #fbcfe8;
+  display: flex;
+}
+
+body {
+  padding-top: 153px; /* 73 + 40 + 40px for header, dropdown, marquee heights */
 }
