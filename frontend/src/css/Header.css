@@ -215,7 +215,7 @@ html {
   background: #fff;
   box-shadow: 2px 0 24px #fbb6ce44;
   padding: 2rem 1rem 1rem 1rem; /* Slightly reduced padding */
-  z-index: 100;
+  z-index: 1010;
   animation: slideInLeft 0.3s;
 }
 

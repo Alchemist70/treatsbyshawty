@@ -17,7 +17,7 @@
   display: flex; /* Use flexbox for the content blocks */
   align-items: center; /* Vertically center the text */
   flex-shrink: 0; /* Prevent the content from shrinking */
-  animation: marquee 50s linear infinite; /* Increased duration */
+  animation: marquee 20s linear infinite;
   font-weight: 500;
 }
 
