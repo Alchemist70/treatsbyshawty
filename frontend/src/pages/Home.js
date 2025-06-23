@@ -378,7 +378,6 @@ export default function Home() {
           </div>
           <h2 className="home-testimonials-title">What Our Customers Say</h2>
         </div>
-
         {testimonialsLoading ? (
           <div className="loading-state">Loading testimonials...</div>
         ) : testimonialsError ? (
