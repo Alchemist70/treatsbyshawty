@@ -216,10 +216,13 @@ export default function Admin() {
     setShowcaseError("");
     let imageUrl = showcaseForm.image;
     try {
-      const file = showcaseImageRef.current?.files?.[0];
-      if (file) {
-        imageUrl = await handleShowcaseImageUpload(file);
+      if (showcaseImageSource === "upload") {
+        const file = showcaseImageRef.current?.files?.[0];
+        if (file) {
+          imageUrl = await handleShowcaseImageUpload(file);
+        }
       }
+      // If 'url', use showcaseForm.image directly
       const token = localStorage.getItem("token");
       if (showcaseForm._id) {
         // Edit
@@ -294,15 +297,14 @@ export default function Admin() {
     setTestimonialSuccess("");
     setTestimonialsError("");
     let imageUrl = testimonialForm.image;
-
     try {
-      // Handle new image upload for testimonials
-      const file = testimonialImageRef.current?.files?.[0];
-      if (file) {
-        // Reusing the showcase image upload function as it's identical
-        imageUrl = await handleShowcaseImageUpload(file);
+      if (testimonialImageSource === "upload") {
+        const file = testimonialImageRef.current?.files?.[0];
+        if (file) {
+          imageUrl = await handleTestimonialImageUpload(file);
+        }
       }
-
+      // If 'url', use testimonialForm.image directly
       const token = localStorage.getItem("token");
       if (testimonialForm._id) {
         // Edit
