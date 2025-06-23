@@ -42,6 +42,7 @@ export default function Admin() {
   const [showcaseSaving, setShowcaseSaving] = useState(false);
   const [showcaseSuccess, setShowcaseSuccess] = useState("");
   const showcaseImageRef = useRef();
+  const [showcaseImageSource, setShowcaseImageSource] = useState("url"); // 'url' or 'upload'
 
   // --- Testimonials State ---
   const [testimonials, setTestimonials] = useState([]);
@@ -57,6 +58,7 @@ export default function Admin() {
   const [testimonialSaving, setTestimonialSaving] = useState(false);
   const [testimonialSuccess, setTestimonialSuccess] = useState("");
   const testimonialImageRef = useRef();
+  const [testimonialImageSource, setTestimonialImageSource] = useState("url"); // 'url' or 'upload'
 
   useEffect(() => {
     const userStr = localStorage.getItem("user");
@@ -572,25 +574,55 @@ export default function Admin() {
                       value={showcaseForm.order}
                       onChange={handleShowcaseFormChange}
                     />
-                    <input
-                      type="file"
-                      ref={showcaseImageRef}
-                      className="admin-input"
-                      style={{ width: 180 }}
-                      accept="image/*"
-                    />
-                    {showcaseForm.image && (
-                      <img
-                        src={showcaseForm.image}
-                        alt="Preview"
-                        style={{
-                          width: 48,
-                          height: 48,
-                          objectFit: "cover",
-                          borderRadius: 8,
-                        }}
-                      />
-                    )}
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 4,
+                      }}
+                    >
+                      <div>
+                        <label>
+                          <input
+                            type="radio"
+                            name="showcaseImageSource"
+                            value="url"
+                            checked={showcaseImageSource === "url"}
+                            onChange={() => setShowcaseImageSource("url")}
+                          />
+                          Image URL
+                        </label>
+                        <label style={{ marginLeft: 8 }}>
+                          <input
+                            type="radio"
+                            name="showcaseImageSource"
+                            value="upload"
+                            checked={showcaseImageSource === "upload"}
+                            onChange={() => setShowcaseImageSource("upload")}
+                          />
+                          Upload Image
+                        </label>
+                      </div>
+                      {showcaseImageSource === "url" ? (
+                        <input
+                          type="text"
+                          name="image"
+                          placeholder="Image URL"
+                          className="admin-input"
+                          value={showcaseForm.image}
+                          onChange={handleShowcaseFormChange}
+                          style={{ width: 180 }}
+                        />
+                      ) : (
+                        <input
+                          type="file"
+                          ref={showcaseImageRef}
+                          className="admin-input"
+                          style={{ width: 180 }}
+                          accept="image/*"
+                        />
+                      )}
+                    </div>
                   </div>
                   <button
                     className="signup-btn"
@@ -723,25 +755,55 @@ export default function Admin() {
                       value={testimonialForm.order}
                       onChange={handleTestimonialFormChange}
                     />
-                    <input
-                      type="file"
-                      ref={testimonialImageRef}
-                      className="admin-input"
-                      style={{ width: 180 }}
-                      accept="image/*"
-                    />
-                    {testimonialForm.image && (
-                      <img
-                        src={testimonialForm.image}
-                        alt="Preview"
-                        style={{
-                          width: 48,
-                          height: 48,
-                          objectFit: "cover",
-                          borderRadius: 8,
-                        }}
-                      />
-                    )}
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 4,
+                      }}
+                    >
+                      <div>
+                        <label>
+                          <input
+                            type="radio"
+                            name="testimonialImageSource"
+                            value="url"
+                            checked={testimonialImageSource === "url"}
+                            onChange={() => setTestimonialImageSource("url")}
+                          />
+                          Image URL
+                        </label>
+                        <label style={{ marginLeft: 8 }}>
+                          <input
+                            type="radio"
+                            name="testimonialImageSource"
+                            value="upload"
+                            checked={testimonialImageSource === "upload"}
+                            onChange={() => setTestimonialImageSource("upload")}
+                          />
+                          Upload Image
+                        </label>
+                      </div>
+                      {testimonialImageSource === "url" ? (
+                        <input
+                          type="text"
+                          name="image"
+                          placeholder="Image URL"
+                          className="admin-input"
+                          value={testimonialForm.image}
+                          onChange={handleTestimonialFormChange}
+                          style={{ width: 180 }}
+                        />
+                      ) : (
+                        <input
+                          type="file"
+                          ref={testimonialImageRef}
+                          className="admin-input"
+                          style={{ width: 180 }}
+                          accept="image/*"
+                        />
+                      )}
+                    </div>
                   </div>
                   <textarea
                     name="text"

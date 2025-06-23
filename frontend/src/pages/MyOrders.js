@@ -273,6 +273,19 @@ export default function MyOrders() {
                             Cancel
                           </button>
                         )}
+                        {(order.paymentReceipt || order.receipt) && (
+                          <a
+                            href={`https://treatsbyshawty-backend-5dmq.onrender.com/${
+                              order.paymentReceipt || order.receipt
+                            }`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="receipt-link"
+                            style={{ display: "block", marginTop: 8 }}
+                          >
+                            View Receipt
+                          </a>
+                        )}
                       </div>
                     </div>
 
