@@ -31,7 +31,10 @@ const AdminUserManagement = () => {
         setUsers(res.data);
         setError("");
       } catch (err) {
-        setError("Failed to fetch users.");
+        setError(
+          "Failed to fetch users. " +
+            (err?.response?.data?.message || err.message)
+        );
       } finally {
         setLoading(false);
       }
@@ -59,7 +62,10 @@ const AdminUserManagement = () => {
         });
         setUsers(users.filter((user) => user._id !== userId));
       } catch (err) {
-        setError("Failed to delete user.");
+        setError(
+          "Failed to delete user. " +
+            (err?.response?.data?.message || err.message)
+        );
       }
     }
   };
@@ -67,13 +73,20 @@ const AdminUserManagement = () => {
   return (
     <div className="admin-user-management">
       <h2>User Management</h2>
+      {/* Debug output for troubleshooting */}
+      <div style={{ fontSize: 12, color: "#888", marginBottom: 8 }}>
+        <div>
+          <b>Debug:</b>
+        </div>
+        <div>user: {JSON.stringify(user)}</div>
+        <div>token: {token ? token.substring(0, 12) + "..." : "none"}</div>
+        <div>error: {error}</div>
+      </div>
       {loading ? (
         <p>Loading users...</p>
       ) : error ? (
         <p className="error-message">{error}</p>
-      ) : users.length === 0 ? (
-        <p>No users found.</p>
-      ) : (
+      ) : user && user.isAdmin ? (
         <table>
           <thead>
             <tr>
@@ -84,24 +97,32 @@ const AdminUserManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
-              <tr key={user._id}>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>{user.isAdmin ? "Yes" : "No"}</td>
-                <td>
-                  <button
-                    onClick={() => handleDelete(user._id)}
-                    className="delete-btn"
-                  >
-                    Delete
-                  </button>
+            {users.length === 0 ? (
+              <tr>
+                <td colSpan={4} style={{ textAlign: "center" }}>
+                  No users found.
                 </td>
               </tr>
-            ))}
+            ) : (
+              users.map((user) => (
+                <tr key={user._id}>
+                  <td>{user.name}</td>
+                  <td>{user.email}</td>
+                  <td>{user.isAdmin ? "Yes" : "No"}</td>
+                  <td>
+                    <button
+                      onClick={() => handleDelete(user._id)}
+                      className="delete-btn"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
-      )}
+      ) : null}
     </div>
   );
 };

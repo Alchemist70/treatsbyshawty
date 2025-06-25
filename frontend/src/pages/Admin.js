@@ -542,7 +542,13 @@ export default function Admin() {
           {/* Tab Content */}
           {tab === "home" && (
             <div
-              style={{ color: "#d81b60", fontWeight: 600, fontSize: "1.1rem" }}
+              style={{
+                color: "#d81b60",
+                fontWeight: 600,
+                fontSize: "1.1rem",
+                display: "flex",
+                justifyContent: "center",
+              }}
             >
               Select a tab to manage homepage content.
             </div>
