@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "../css/AdminUserManagement.css";
 import { API_URL } from "../config";
 
@@ -24,11 +24,8 @@ const AdminUserManagement = () => {
 
   useEffect(() => {
     if (!user) {
-      setTimeout(() => navigate("/login"), 1000);
       setLoading(false);
-      setError(
-        "You must be logged in as an admin to view this page. Redirecting to login..."
-      );
+      setError("You must be logged in as an admin to view this page.");
       return;
     }
     if (!user.isAdmin) {
@@ -54,7 +51,7 @@ const AdminUserManagement = () => {
       }
     };
     fetchUsers();
-  }, [token, user, navigate]);
+  }, [token, user]);
 
   const handleDelete = async (userId) => {
     if (
@@ -89,6 +86,17 @@ const AdminUserManagement = () => {
       </div>
       {loading ? (
         <p>Loading users...</p>
+      ) : !user ? (
+        <div>
+          <p className="error-message">
+            You must be logged in as an admin to view this page.
+          </p>
+          <Link to="/login">Go to Login</Link>
+        </div>
+      ) : !user.isAdmin ? (
+        <p className="error-message">
+          You do not have permission to view this page.
+        </p>
       ) : error ? (
         <p className="error-message">{error}</p>
       ) : (
