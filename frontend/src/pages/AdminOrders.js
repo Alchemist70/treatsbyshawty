@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "../css/Admin.css";
 import "../css/AdminOrders.css";
-import axiosInstance from "../config";
+import axios from "axios";
 import { Link } from "react-router-dom";
+import { API_URL } from "../config";
 
 function StatusModal({ order, onSave, onClose, loading }) {
   // Only allow valid next statuses
@@ -64,10 +65,10 @@ export default function AdminOrders() {
     setErrorOrders("");
     try {
       const token = localStorage.getItem("token");
-      const res = await axiosInstance.get("/api/orders/all", {
+      const { data } = await axios.get("/api/orders", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setOrders(res.data);
+      setOrders(data);
     } catch (err) {
       setErrorOrders(err.response?.data?.message || err.message);
     } finally {
@@ -83,10 +84,15 @@ export default function AdminOrders() {
     setUpdatingStatus(true);
     try {
       const token = localStorage.getItem("token");
-      await axiosInstance.put(
+      await axios.put(
         `/api/orders/${orderId}/status`,
         { status },
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       setShowStatusModal(null);
       fetchOrders();
@@ -102,10 +108,10 @@ export default function AdminOrders() {
     if (!window.confirm("Are you sure you want to delete this order?")) return;
     try {
       const token = localStorage.getItem("token");
-      await axiosInstance.delete(`/api/orders/${orderId}`, {
+      await axios.delete(`/api/orders/${orderId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setOrders(orders.filter((o) => o._id !== orderId));
+      fetchOrders();
     } catch (err) {
       alert(err.response?.data?.message || err.message);
     }
@@ -181,7 +187,7 @@ export default function AdminOrders() {
                       <div className="order-receipt">
                         {order.paymentReceipt || order.receipt ? (
                           <a
-                            href={`/uploads/${
+                            href={`${API_URL}/${
                               order.paymentReceipt || order.receipt
                             }`}
                             target="_blank"

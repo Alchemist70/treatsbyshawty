@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import "../css/Checkout.css";
-import axiosInstance from "../config";
+import axios from "axios";
 import "../css/ThankYou.css";
-import Logo from "../assets/logo.png";
 
 function ThankYou() {
   const location = useLocation();
@@ -43,7 +42,7 @@ function ThankYou() {
         payload = { orderId, rating, comment };
       }
 
-      await axiosInstance.post(url, payload, {
+      await axios.post(url, payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setFeedbackSuccess("Thank you for your feedback!");

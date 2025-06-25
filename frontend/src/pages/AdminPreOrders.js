@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "../css/Admin.css";
 import "../css/AdminPreOrders.css";
-import axiosInstance from "../config";
+import axios from "axios";
+import { API_URL } from "../config";
 
 const STATUS_OPTIONS = [
   "pending",
@@ -46,10 +47,10 @@ export default function AdminPreOrders() {
     setError("");
     try {
       const token = localStorage.getItem("token");
-      const res = await axiosInstance.get("/api/preorders/all", {
+      const { data } = await axios.get("/api/preorders", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setPreorders(res.data);
+      setPreorders(data);
     } catch (err) {
       setError(err.response?.data?.message || err.message);
     } finally {
@@ -65,10 +66,15 @@ export default function AdminPreOrders() {
     setUpdating(id);
     try {
       const token = localStorage.getItem("token");
-      await axiosInstance.put(
+      await axios.put(
         `/api/preorders/${id}/status`,
         { status },
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       fetchPreOrders();
     } catch (err) {
@@ -82,10 +88,15 @@ export default function AdminPreOrders() {
     setUpdating(id);
     try {
       const token = localStorage.getItem("token");
-      await axiosInstance.put(
+      await axios.put(
         `/api/preorders/${id}/status`,
         { depositPaid: true, status: "deposit-paid" },
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       fetchPreOrders();
     } catch (err) {
@@ -100,7 +111,7 @@ export default function AdminPreOrders() {
     setUpdating(deletingPreOrder._id);
     try {
       const token = localStorage.getItem("token");
-      await axiosInstance.delete(`/api/preorders/${deletingPreOrder._id}`, {
+      await axios.delete(`/api/preorders/${deletingPreOrder._id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setDeletingPreOrder(null);
@@ -176,7 +187,7 @@ export default function AdminPreOrders() {
                           {po.customOrder.image && (
                             <div>
                               <img
-                                src={`/uploads/${po.customOrder.image}`}
+                                src={`${API_URL}/${po.customOrder.image}`}
                                 alt="Custom"
                                 style={{
                                   width: 60,
@@ -211,7 +222,7 @@ export default function AdminPreOrders() {
                     <td>
                       {po.depositReceipt ? (
                         <a
-                          href={`/uploads/${po.depositReceipt}`}
+                          href={`${API_URL}/${po.depositReceipt}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="receipt-link"

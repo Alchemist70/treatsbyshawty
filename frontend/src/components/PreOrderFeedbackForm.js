@@ -1,47 +1,41 @@
-import axiosInstance from "../config";
 import React, { useState } from "react";
+import axios from "axios";
 import "../css/Checkout.css"; // Re-use styles
-import "../css/PreOrderFeedbackForm.css";
 
-function PreOrderFeedbackForm({ preOrderId, user, onSubmitSuccess }) {
+function PreOrderFeedbackForm({ preOrderId, user }) {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError("");
-    setSuccess("");
     if (rating === 0) {
       setError("Please select a rating.");
       return;
     }
     try {
       const token = localStorage.getItem("token");
-      await axiosInstance.post(
+      await axios.post(
         `/api/preorders/${preOrderId}/feedback`,
         { rating, comment },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setSuccess("Thank you for your feedback!");
-      if (onSubmitSuccess) {
-        onSubmitSuccess();
-      }
+      setSubmitted(true);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to submit feedback.");
-    } finally {
-      setLoading(false);
+      setError(
+        err.response?.data?.message || "An error occurred submitting feedback."
+      );
     }
   };
 
   if (submitted) {
     return (
       <div className="feedback-thanks">
-        <h3 className="text-xl font-bold text-pink-700">{success}</h3>
+        <h3 className="text-xl font-bold text-pink-700">
+          Thanks for your feedback!
+        </h3>
       </div>
     );
   }
@@ -70,7 +64,7 @@ function PreOrderFeedbackForm({ preOrderId, user, onSubmitSuccess }) {
         className="feedback-textarea"
       ></textarea>
       {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-      <button type="submit" className="feedback-submit-btn" disabled={loading}>
+      <button type="submit" className="feedback-submit-btn">
         Submit Feedback
       </button>
     </form>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import axiosInstance from "../config";
+import axios from "axios";
 import { PaystackButton } from "react-paystack";
 import "../css/PaymentPage.css";
 
@@ -83,7 +83,7 @@ export default function PreOrderPaymentCard() {
         formData.append("customOrder", JSON.stringify({}));
       }
 
-      const res = await axiosInstance.post("/api/preorders", formData, {
+      const res = await axios.post("/api/preorders", formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

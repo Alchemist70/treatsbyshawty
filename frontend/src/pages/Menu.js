@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import axiosInstance from "../config";
+import axios from "axios";
 import { useLocation, Navigate } from "react-router-dom";
 import "../css/Menu.css";
 
@@ -17,7 +17,7 @@ const Menu = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const { data } = await axiosInstance.get("/api/products");
+        const { data } = await axios.get("/api/products");
         setProducts(Array.isArray(data) ? data : []);
       } catch (err) {
         setError("Failed to load products. Please try again later.");
@@ -92,7 +92,7 @@ const Menu = () => {
           (item) => item.product._id === product._id
         );
         if (itemToSync) {
-          axiosInstance
+          axios
             .post(
               "/api/cart",
               { productId: product._id, quantity: itemToSync.quantity },

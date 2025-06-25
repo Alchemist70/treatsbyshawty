@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import "../css/Login.css"; // Reuse shared auth styles
-import axiosInstance from "../config";
+import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import Logo from "../assets/logo.png";
@@ -27,9 +27,7 @@ export default function ResetPassword() {
     }
     setLoading(true);
     try {
-      await axiosInstance.post(`/api/auth/reset-password/${token}`, {
-        password: password,
-      });
+      await axios.post(`/api/auth/reset-password/${token}`, { password });
       setSuccess("Password reset successfully! Redirecting to login...");
       setTimeout(() => navigate("/login"), 2000);
     } catch (err) {

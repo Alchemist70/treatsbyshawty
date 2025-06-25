@@ -1,5 +1,5 @@
-import axiosInstance from "../config";
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./../css/AdminFeedback.css";
 
 const AdminFeedback = () => {
@@ -14,20 +14,19 @@ const AdminFeedback = () => {
       setError("");
       try {
         const token = localStorage.getItem("token");
-        const websiteRes = await axiosInstance.get("/api/website-feedback", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const preorderRes = await axiosInstance.get(
+        const headers = { Authorization: `Bearer ${token}` };
+
+        const reviewsRes = await axios.get("/api/reviews/all", { headers });
+        const preorderFeedbackRes = await axios.get(
           "/api/preorders/feedback/all",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+          { headers }
         );
-        const websiteFeedbacks = websiteRes.data.map((fb) => ({
+
+        const websiteFeedbacks = reviewsRes.data.map((fb) => ({
           ...fb,
           type: "Website Order",
         }));
-        const preorderFeedbacks = preorderRes.data.map((fb) => ({
+        const preorderFeedbacks = preorderFeedbackRes.data.map((fb) => ({
           ...fb,
           type: "Pre-Order",
         }));
@@ -55,38 +54,6 @@ const AdminFeedback = () => {
     if (filter === "preorder") return fb.type === "Pre-Order";
     return true;
   });
-
-  const handleDeleteWebsiteFeedback = async (id) => {
-    if (window.confirm("Are you sure you want to delete this feedback?")) {
-      try {
-        const token = localStorage.getItem("token");
-        await axiosInstance.delete(`/api/website-feedback/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setFeedbacks(feedbacks.filter((f) => f._id !== id));
-      } catch (err) {
-        setError(
-          err.response?.data?.message || "Failed to delete website feedback."
-        );
-      }
-    }
-  };
-
-  const handleDeletePreorderFeedback = async (id) => {
-    if (window.confirm("Are you sure you want to delete this feedback?")) {
-      try {
-        const token = localStorage.getItem("token");
-        await axiosInstance.delete(`/api/preorders/feedback/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setFeedbacks(feedbacks.filter((f) => f._id !== id));
-      } catch (err) {
-        setError(
-          err.response?.data?.message || "Failed to delete preorder feedback."
-        );
-      }
-    }
-  };
 
   return (
     <div className="admin-feedback-container">
@@ -171,22 +138,6 @@ const AdminFeedback = () => {
                     <span className="feedback-date">
                       {new Date(fb.createdAt).toLocaleString()}
                     </span>
-                  </div>
-                  <div className="feedback-card-actions">
-                    {fb.type === "Website Order" && (
-                      <button
-                        onClick={() => handleDeleteWebsiteFeedback(fb._id)}
-                      >
-                        Delete
-                      </button>
-                    )}
-                    {fb.type === "Pre-Order" && (
-                      <button
-                        onClick={() => handleDeletePreorderFeedback(fb._id)}
-                      >
-                        Delete
-                      </button>
-                    )}
                   </div>
                 </div>
               );

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
-import axiosInstance from "../config";
+import axios from "axios";
 import "../css/Search.css"; // Using the new Search CSS
 
 export default function Search() {
@@ -15,7 +15,7 @@ export default function Search() {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const { data } = await axiosInstance.get("/api/products");
+        const { data } = await axios.get("/api/products");
         setProducts(data);
         setError("");
       } catch (err) {

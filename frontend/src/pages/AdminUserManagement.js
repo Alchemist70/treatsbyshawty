@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import axiosInstance from "../config";
+import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import "../css/AdminUserManagement.css";
+import { API_URL } from "../config";
 
 const AdminUserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -33,7 +34,7 @@ const AdminUserManagement = () => {
     const fetchUsers = async () => {
       setLoading(true);
       try {
-        const res = await axiosInstance.get("/api/users", {
+        const res = await axios.get(`${API_URL}/api/users`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUsers(res.data);
@@ -57,7 +58,7 @@ const AdminUserManagement = () => {
       )
     ) {
       try {
-        await axiosInstance.delete(`/api/users/${userId}`, {
+        await axios.delete(`${API_URL}/api/users/${userId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUsers(users.filter((user) => user._id !== userId));
@@ -67,23 +68,6 @@ const AdminUserManagement = () => {
             (err?.response?.data?.message || err.message)
         );
       }
-    }
-  };
-
-  const handleRoleChange = async (userId, newRole) => {
-    try {
-      await axiosInstance.put(
-        `/api/users/${userId}/role`,
-        { role: newRole },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setUsers(
-        users.map((user) =>
-          user._id === userId ? { ...user, isAdmin: newRole } : user
-        )
-      );
-    } catch (err) {
-      setError(err.response?.data?.message || "Failed to change role.");
     }
   };
 
@@ -142,12 +126,6 @@ const AdminUserManagement = () => {
                       className="delete-btn"
                     >
                       Delete
-                    </button>
-                    <button
-                      onClick={() => handleRoleChange(user._id, !user.isAdmin)}
-                      className="role-btn"
-                    >
-                      {user.isAdmin ? "Remove Admin" : "Make Admin"}
                     </button>
                   </td>
                 </tr>

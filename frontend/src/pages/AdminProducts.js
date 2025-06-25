@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../css/Admin.css";
 import "../css/AdminProducts.css";
-import axiosInstance from "../config";
+import axios from "axios";
 
 function ProductForm({ initial, onSave, onClose, loading }) {
   const [form, setForm] = useState(
@@ -184,8 +184,11 @@ export default function AdminProducts() {
     setLoadingProducts(true);
     setErrorProducts("");
     try {
-      const res = await axiosInstance.get("/api/products");
-      setProducts(res.data);
+      const token = localStorage.getItem("token");
+      const { data } = await axios.get("/api/products", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setProducts(data);
     } catch (err) {
       setErrorProducts(err.response?.data?.message || err.message);
     } finally {
@@ -215,16 +218,12 @@ export default function AdminProducts() {
       if (imageFile) {
         const formData = new FormData();
         formData.append("image", imageFile);
-        const uploadRes = await axiosInstance.post(
-          "/api/products/upload",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const uploadRes = await axios.post("/api/products/upload", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        });
         imageUrl = uploadRes.data.url;
       }
 
@@ -238,13 +237,9 @@ export default function AdminProducts() {
       };
 
       if (editingProduct) {
-        await axiosInstance.put(
-          `/api/products/${editingProduct._id}`,
-          payload,
-          config
-        );
+        await axios.put(`/api/products/${editingProduct._id}`, payload, config);
       } else {
-        await axiosInstance.post("/api/products", payload, config);
+        await axios.post("/api/products", payload, config);
       }
 
       setShowProductForm(false);
@@ -263,12 +258,9 @@ export default function AdminProducts() {
     setSavingProduct(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await axiosInstance.delete(
-        `/api/products/${deletingProduct._id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await axios.delete(`/api/products/${deletingProduct._id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       const data = res.data;
       if (!res.status || res.status < 200 || res.status >= 300)
         throw new Error(data.message || "Failed to delete product");

@@ -1,47 +1,26 @@
-import React, { useState, useEffect } from "react";
-import axiosInstance from "../config";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 import "../css/BankTransfer.css";
 
 export default function BankTransfer() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [order, setOrder] = useState(null);
-  const [orderId, setOrderId] = useState(location.state?.orderId || null);
-  const [receipt, setReceipt] = useState(null);
   const {
     cartItems = [],
-    form = {},
-    subtotal = 0,
-    deliveryFee = 0,
-    total = 0,
+    form,
+    subtotal,
+    deliveryFee,
+    total,
   } = location.state || {};
 
-  useEffect(() => {
-    if (!orderId) return;
-    const fetchOrder = async () => {
-      setLoading(true);
-      try {
-        const token = localStorage.getItem("token");
-        const res = await axiosInstance.get(`/api/orders/${orderId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setOrder(res.data);
-      } catch (err) {
-        setError(
-          err.response?.data?.message || "Failed to fetch order details."
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchOrder();
-  }, [orderId]);
+  const [receipt, setReceipt] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   if (!location.state) {
-    return <div>Order information is missing.</div>;
+    navigate("/checkout");
+    return null;
   }
 
   const handleFileChange = (e) => {
@@ -96,7 +75,7 @@ export default function BankTransfer() {
         total: total,
       };
 
-      const { data: order } = await axiosInstance.post(
+      const { data: order } = await axios.post(
         "/api/orders",
         orderData,
         config
@@ -105,13 +84,9 @@ export default function BankTransfer() {
       const receiptData = new FormData();
       receiptData.append("receipt", receipt);
 
-      await axiosInstance.post(
-        `/api/orders/${order._id}/upload-receipt`,
-        receiptData,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await axios.post(`/api/orders/${order._id}/upload-receipt`, receiptData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       setLoading(false);
       localStorage.removeItem("cartItems");
@@ -119,7 +94,7 @@ export default function BankTransfer() {
 
       // Also clear the cart on the server
       try {
-        await axiosInstance.delete("/api/cart", {
+        await axios.delete("/api/cart", {
           headers: { Authorization: `Bearer ${token}` },
         });
       } catch (cartClearError) {
@@ -137,28 +112,20 @@ export default function BankTransfer() {
       };
 
       localStorage.setItem("latestOrderSummary", JSON.stringify(orderSummary));
-      setOrderId(order._id);
+      navigate("/thank-you", {
+        state: {
+          orderId: order._id,
+          total: order.total,
+          cartItems: order.items,
+          payType: "Bank Transfer",
+          subtotal: order.subtotal,
+          deliveryFee: order.deliveryFee,
+        },
+      });
     } catch (err) {
       setError(
         err.response?.data?.message || err.message || "An error occurred."
       );
-      setLoading(false);
-    }
-  };
-
-  const handleConfirmPayment = async () => {
-    try {
-      setLoading(true);
-      const token = localStorage.getItem("token");
-      await axiosInstance.post(
-        `/api/orders/${orderId}/confirm-payment`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      navigate("/thank-you");
-    } catch (err) {
-      setError(err.response?.data?.message || "Failed to confirm payment.");
-    } finally {
       setLoading(false);
     }
   };

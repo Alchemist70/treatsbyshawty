@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import axiosInstance from "../config";
+import axios from "axios";
 import "../css/Home.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { API_URL } from "../config";
 
 const menuCategories = [
   {
@@ -35,8 +35,6 @@ export default function Home() {
   const [testimonialsLoading, setTestimonialsLoading] = useState(true);
   const [testimonialsError, setTestimonialsError] = useState("");
 
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     const userStr = localStorage.getItem("user");
     if (userStr) {
@@ -46,25 +44,37 @@ export default function Home() {
     }
   }, []);
 
+  // Fetch Our Story
   useEffect(() => {
-    const fetchHomeData = async () => {
-      setLoading(true);
-      try {
-        const contentRes = await axiosInstance.get("/api/home-content");
-        const showcaseRes = await axiosInstance.get("/api/product-showcase");
-        const testimonialsRes = await axiosInstance.get("/api/testimonials");
+    setStoryLoading(true);
+    setStoryError("");
+    axios
+      .get("/api/home-content")
+      .then((res) => setStory(res.data))
+      .catch(() => setStoryError("Failed to load story."))
+      .finally(() => setStoryLoading(false));
+  }, []);
 
-        setStory(contentRes.data);
-        setShowcase(showcaseRes.data);
-        setTestimonials(testimonialsRes.data);
-      } catch (error) {
-        console.error("Failed to fetch homepage data", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Fetch Product Showcase
+  useEffect(() => {
+    setShowcaseLoading(true);
+    setShowcaseError("");
+    axios
+      .get("/api/product-showcase")
+      .then((res) => setShowcase(res.data))
+      .catch(() => setShowcaseError("Failed to load showcase."))
+      .finally(() => setShowcaseLoading(false));
+  }, []);
 
-    fetchHomeData();
+  // Fetch Testimonials
+  useEffect(() => {
+    setTestimonialsLoading(true);
+    setTestimonialsError("");
+    axios
+      .get("/api/testimonials")
+      .then((res) => setTestimonials(res.data))
+      .catch(() => setTestimonialsError("Failed to load testimonials."))
+      .finally(() => setTestimonialsLoading(false));
   }, []);
 
   return (
@@ -347,7 +357,7 @@ export default function Home() {
                   src={
                     item.image.startsWith("http")
                       ? item.image
-                      : `/uploads/${item.image}`
+                      : `${API_URL}/${item.image}`
                   }
                   alt={item.title}
                   className="product-image"
@@ -384,7 +394,7 @@ export default function Home() {
                     (testimonial.image &&
                       (testimonial.image.startsWith("http")
                         ? testimonial.image
-                        : `/uploads/${testimonial.image}`)) ||
+                        : `${API_URL}/${testimonial.image}`)) ||
                     "/placeholder-avatar.png"
                   }
                   alt={testimonial.name}

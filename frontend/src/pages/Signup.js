@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../css/Login.css"; // Reuse the login CSS for consistent styling
-import axiosInstance from "../config";
+import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import Logo from "../assets/logo.png";
@@ -35,30 +35,11 @@ export default function Signup() {
     }
     setLoading(true);
     try {
-      await axiosInstance.post("/api/auth/register", {
+      await axios.post("/api/auth/register", {
         name: form.name,
         email: form.email,
         password: form.password,
       });
-
-      // After successful registration, log the user in to get a token and sync the cart
-      const loginRes = await axiosInstance.post("/api/auth/login", {
-        email: form.email,
-        password: form.password,
-      });
-
-      const { token, user } = loginRes.data;
-
-      // --- Cart Sync Logic ---
-      const localCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-      if (localCart.length > 0) {
-        await axiosInstance.put(
-          "/api/cart",
-          { cartItems: localCart },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-      }
-
       setSuccess("Account created successfully! Redirecting to login...");
       setTimeout(() => navigate("/login"), 1500);
     } catch (err) {

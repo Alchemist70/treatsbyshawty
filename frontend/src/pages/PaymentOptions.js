@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../css/Checkout.css";
 import "../css/PaymentOptions.css";
-import axiosInstance from "../config";
+import axios from "axios";
 
 function ConfirmationModal({ open, onConfirm, onCancel, loading }) {
   if (!open) return null;
@@ -38,81 +38,174 @@ function ConfirmationModal({ open, onConfirm, onCancel, loading }) {
 export default function PaymentOptions() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [selectedOption, setSelectedOption] = useState("paystack");
 
-  // Get order details from location state
-  const { order } = location.state || {};
+  // Get all data from the previous page
+  const {
+    cartItems = [],
+    form = {},
+    subtotal = 0,
+    deliveryFee = 0,
+    total = 0,
+  } = location.state || {};
 
-  if (!order) {
-    // Redirect if no order details are found
-    navigate("/checkout");
-    return null;
-  }
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [isConfirming, setIsConfirming] = useState(false);
 
-  const handleContinue = async () => {
-    if (selectedOption === "paystack") {
-      try {
-        const token = localStorage.getItem("token");
-        const res = await axiosInstance.post(
-          "/api/orders/create",
-          { ...order, paymentMethod: "Paystack" },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        navigate(`/payment/${res.data.orderId}`);
-      } catch (error) {
-        console.error("Failed to create order", error);
-        // Handle error, maybe show a message to the user
-      }
-    } else if (selectedOption === "bank_transfer") {
-      navigate("/bank-transfer", { state: { order } });
+  useEffect(() => {
+    // If state is empty, maybe the user refreshed the page.
+    // We should redirect them back to checkout to be safe.
+    if (!location.state) {
+      navigate("/checkout");
     }
+  }, [location.state, navigate]);
+
+  const placeOrder = async (payType) => {
+    setLoading(true);
+    setError("");
+    try {
+      const token = localStorage.getItem("token");
+      const items = cartItems.map((item) => ({
+        name: item.product.name,
+        quantity: item.quantity,
+        image: item.product.image,
+        price: item.product.price,
+        product: item.product._id,
+      }));
+
+      if (!items.length) {
+        setError("No valid items in cart. Please re-add products.");
+        setLoading(false);
+        return;
+      }
+
+      const res = await axios.post(
+        "/api/orders",
+        {
+          items,
+          subtotal, // Pass subtotal
+          deliveryFee, // Pass delivery fee
+          total, // Pass final total
+          address: form.address,
+          phone: form.phone,
+          zip: form.zip,
+          city: form.city,
+          state: form.state,
+          paymentMethod: payType,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      localStorage.setItem(
+        "latestOrderSummary",
+        JSON.stringify({ cartItems, subtotal, deliveryFee, total, payType })
+      );
+      localStorage.removeItem("cartItems");
+      window.dispatchEvent(new Event("cart-updated"));
+
+      // Also clear the cart on the server
+      try {
+        await axios.delete("/api/cart", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } catch (cartClearError) {
+        // Log this error but don't block the user flow
+        console.error("Failed to clear server-side cart:", cartClearError);
+      }
+
+      navigate("/thank-you", {
+        state: {
+          cartItems,
+          form,
+          subtotal,
+          deliveryFee,
+          total,
+          payType,
+          orderId: res.data._id,
+        },
+      });
+    } catch (err) {
+      setError(err.response?.data?.message || err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleOption = (option) => {
+    const stateToPass = { cartItems, form, subtotal, deliveryFee, total };
+    if (option === "pay-now") {
+      navigate("/payment-method-selection", { state: stateToPass });
+    } else if (option === "pay-on-delivery") {
+      setIsConfirming(true);
+    }
+  };
+
+  const handleConfirmOrder = () => {
+    placeOrder("Pay on Delivery");
   };
 
   return (
     <div className="payment-options-container">
+      <ConfirmationModal
+        open={isConfirming}
+        onConfirm={handleConfirmOrder}
+        onCancel={() => setIsConfirming(false)}
+        loading={loading}
+      />
+      <h1 className="payment-options-title">Payment Options</h1>
       <div className="payment-options-card">
-        <h2>Choose Payment Method</h2>
-        <div className="payment-options-list">
-          <div
-            className={`payment-option ${
-              selectedOption === "paystack" ? "selected" : ""
-            }`}
-            onClick={() => setSelectedOption("paystack")}
-          >
-            <input
-              type="radio"
-              id="paystack"
-              name="payment-method"
-              value="paystack"
-              checked={selectedOption === "paystack"}
-              onChange={() => setSelectedOption("paystack")}
-            />
-            <label htmlFor="paystack">Pay with Card (Paystack)</label>
-          </div>
-          <div
-            className={`payment-option ${
-              selectedOption === "bank_transfer" ? "selected" : ""
-            }`}
-            onClick={() => setSelectedOption("bank_transfer")}
-          >
-            <input
-              type="radio"
-              id="bank_transfer"
-              name="payment-method"
-              value="bank_transfer"
-              checked={selectedOption === "bank_transfer"}
-              onChange={() => setSelectedOption("bank_transfer")}
-            />
-            <label htmlFor="bank_transfer">Bank Transfer</label>
-          </div>
+        <h2 className="payment-options-card-title">Order Summary</h2>
+        <ul className="summary-list">
+          {cartItems.map((item, idx) => (
+            <li key={idx} className="summary-item">
+              <span className="summary-item-name">
+                {item.product.name} × {item.quantity}
+              </span>
+              <span className="summary-item-price">
+                ₦{(item.product.price * item.quantity).toFixed(2)}
+              </span>
+            </li>
+          ))}
+        </ul>
+        <div className="summary-divider" />
+        <div className="summary-row">
+          <span>Subtotal</span>
+          <span>₦{subtotal.toFixed(2)}</span>
         </div>
-        <button
-          className="continue-btn"
-          onClick={handleContinue}
-          disabled={!selectedOption}
-        >
-          Continue
-        </button>
+        <div className="summary-row">
+          <span>Delivery Fee</span>
+          <span>₦{deliveryFee.toFixed(2)}</span>
+        </div>
+        <div className="summary-divider" />
+        <div className="summary-total">
+          <span>Total</span>
+          <span>₦{total.toFixed(2)}</span>
+        </div>
+      </div>
+      <div className="payment-options-card">
+        <h2 className="payment-options-card-title">Choose Payment Option</h2>
+        {error && <div className="error-message">{error}</div>}
+        <div className="payment-buttons-container">
+          <button
+            className="payment-option-btn"
+            onClick={() => handleOption("pay-on-delivery")}
+            disabled={loading}
+          >
+            {loading ? "Placing Order..." : "Pay on Delivery"}
+          </button>
+          <button
+            className="payment-option-btn"
+            onClick={() => handleOption("pay-now")}
+            disabled={loading}
+          >
+            {loading ? "Processing..." : "Pay Now"}
+          </button>
+        </div>
       </div>
     </div>
   );

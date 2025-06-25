@@ -3,10 +3,11 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import axiosInstance, { API_URL } from "./config";
+import axios from "axios";
+import { API_URL } from "./config";
 
 // Configure axios base URL
-axiosInstance.defaults.baseURL = API_URL;
+axios.defaults.baseURL = API_URL;
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

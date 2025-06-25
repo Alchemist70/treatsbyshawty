@@ -1,50 +1,85 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import axiosInstance from "../config";
 import "../css/BankTransfer.css";
+import axios from "axios";
 
 export default function PreOrderPaymentBank() {
   const location = useLocation();
   const navigate = useNavigate();
+
+  const { event, menuItems, customOrder, useCustom, total, deposit } =
+    location.state || {};
+
+  const [receipt, setReceipt] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [preOrder, setPreOrder] = useState(null);
-  const [preOrderId, setPreOrderId] = useState(location.state?.preOrderId);
-  const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    const fetchPreOrder = async () => {
-      setLoading(true);
-      try {
-        const res = await axiosInstance.get(`/api/preorders/${preOrderId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setPreOrder(res.data);
-      } catch (err) {
-        setError(
-          err.response?.data?.message || err.message || "An error occurred."
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
+  if (!location.state) {
+    navigate("/preorder");
+    return null;
+  }
 
-    if (preOrderId) {
-      fetchPreOrder();
+  const handleFileChange = (e) => {
+    setReceipt(e.target.files[0]);
+  };
+
+  const handleUploadReceipt = async () => {
+    if (!receipt) {
+      setError("Please upload a payment receipt to continue.");
+      return;
     }
-  }, [preOrderId, token]);
 
-  const handlePaymentConfirm = async () => {
+    setLoading(true);
+    setError("");
+
     try {
-      setLoading(true);
-      await axiosInstance.post(
-        `/api/preorders/confirm-deposit`,
-        { preOrderId },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const token = localStorage.getItem("token");
+      const formData = new FormData();
+
+      // Append all data
+      formData.append("eventType", event.type);
+      formData.append("eventDate", event.date);
+      formData.append("eventLocation", event.location);
+      formData.append("contact", event.contact);
+      formData.append("notes", event.notes);
+      formData.append("total", total);
+      formData.append("deposit", deposit);
+      formData.append("paymentMethod", "Bank Transfer");
+      formData.append("receipt", receipt);
+
+      if (useCustom) {
+        formData.append(
+          "customOrder",
+          JSON.stringify({ description: customOrder.description })
+        );
+        if (customOrder.image) {
+          formData.append("customImage", customOrder.image);
+        }
+        formData.append("items", JSON.stringify([]));
+      } else {
+        formData.append(
+          "items",
+          JSON.stringify(
+            menuItems.map((i) => ({
+              product: i.product._id,
+              quantity: i.quantity,
+            }))
+          )
+        );
+        formData.append("customOrder", JSON.stringify({}));
+      }
+
+      const res = await axios.post("/api/preorders", formData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (res.status < 200 || res.status >= 300) {
+        throw new Error(res.data?.message || "Failed to submit pre-order");
+      }
+
       navigate("/thank-you", {
         state: {
-          orderId: preOrderId,
+          orderId: res.data._id,
           isPreOrder: true,
           isBankTransfer: true,
         },
@@ -58,59 +93,64 @@ export default function PreOrderPaymentBank() {
     }
   };
 
-  if (!location.state) {
-    return (
-      <div className="bank-transfer-container">
-        <h2>Error</h2>
-        <p>No pre-order information found. Please try again.</p>
-      </div>
-    );
-  }
-
   return (
     <div className="bank-transfer-container">
+      <h1 className="bank-transfer-page-title">Bank Transfer Deposit</h1>
       <div className="bank-transfer-card">
-        <h2>Bank Transfer for Pre-Order Deposit</h2>
-        {loading && <p>Loading pre-order details...</p>}
+        <h2 className="bank-transfer-title">Deposit Amount</h2>
+        <div className="amount-display">
+          <span className="amount-label">60% Deposit Due:</span>
+          <span className="amount-value">₦{deposit.toFixed(2)}</span>
+        </div>
+        <div className="bank-details">
+          <h3>Bank Account Details</h3>
+          <p>
+            <strong>Bank Name:</strong> TreatsByShawty Bank
+          </p>
+          <p>
+            <strong>Account Number:</strong> 1234567890
+          </p>
+          <p>
+            <strong>Account Name:</strong> TreatsByShawty
+          </p>
+        </div>
+        <div className="transfer-instructions">
+          Please transfer the deposit amount to the account above, then upload
+          your receipt below.
+        </div>
+      </div>
+      <div className="bank-transfer-card">
+        <h2 className="bank-transfer-title">Upload Payment Receipt</h2>
+        <div className="upload-section">
+          <input
+            type="file"
+            id="receipt-upload"
+            onChange={handleFileChange}
+            accept="image/*,.pdf"
+            style={{ display: "none" }}
+          />
+          <label htmlFor="receipt-upload" className="file-label">
+            Choose File
+          </label>
+          {receipt && <span className="file-name">{receipt.name}</span>}
+        </div>
         {error && <p className="error-message">{error}</p>}
-        {preOrder && (
-          <>
-            <div className="bank-details">
-              <h3>Bank Account Details</h3>
-              <p>
-                <strong>Account Name:</strong> TreatsByShawty
-              </p>
-              <p>
-                <strong>Account Number:</strong> 1234567890
-              </p>
-              <p>
-                <strong>Bank:</strong> GTBank
-              </p>
-              <p>
-                <strong>Amount to Pay:</strong> NGN{" "}
-                {preOrder.depositAmount.toFixed(2)}
-              </p>
-            </div>
-            <div className="payment-instructions">
-              <h3>Instructions</h3>
-              <p>
-                Please transfer the deposit amount to the account above. Use
-                your pre-order ID <strong>{preOrder._id}</strong> as the payment
-                reference.
-              </p>
-              <p>
-                After making the payment, click the button below to confirm.
-              </p>
-            </div>
-            <button
-              onClick={handlePaymentConfirm}
-              className="confirm-payment-btn"
-              disabled={loading}
-            >
-              {loading ? "Confirming..." : "I have made the payment"}
-            </button>
-          </>
-        )}
+        <button
+          className="upload-btn"
+          onClick={handleUploadReceipt}
+          disabled={loading}
+        >
+          {loading ? "Submitting..." : "Submit Pre-Order"}
+        </button>
+        <button
+          className="back-btn"
+          onClick={() =>
+            navigate("/preorder-payment-options", { state: location.state })
+          }
+          disabled={loading}
+        >
+          Back
+        </button>
       </div>
     </div>
   );

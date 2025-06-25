@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "../css/Checkout.css";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../config";
+import axios from "axios";
 
 // Debounce helper function
 function debounce(func, delay) {
@@ -117,7 +117,7 @@ export default function Checkout() {
       setIsCalculatingFee(true);
       try {
         const token = localStorage.getItem("token");
-        const { data } = await axiosInstance.post(
+        const { data } = await axios.post(
           "/api/delivery/calculate",
           { city, subtotal: currentSubtotal },
           { headers: { Authorization: `Bearer ${token}` } }
