@@ -393,6 +393,7 @@ export default function Admin() {
           borderRadius: "0 0 24px 24px",
           boxShadow: "0 2px 12px #fbb6ce33",
           marginBottom: 32,
+          textAlign: "center",
         }}
       >
         <h1
@@ -402,6 +403,7 @@ export default function Admin() {
             fontSize: 38,
             margin: 0,
             letterSpacing: 1,
+            textAlign: "center",
           }}
         >
           Admin Dashboard
@@ -501,7 +503,15 @@ export default function Admin() {
           </div>
         </div>
         <div className="dashboard-management-tabs">
-          <div className="tabs">
+          <div
+            className="tabs"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              gap: 32,
+              marginBottom: 12,
+            }}
+          >
             <button
               className={tab === "home" ? "admin-tab-active" : "admin-tab"}
               onClick={() => setTab("home")}
