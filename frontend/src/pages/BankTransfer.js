@@ -13,15 +13,35 @@ export default function BankTransfer() {
   const [receipt, setReceipt] = useState(null);
   const {
     cartItems = [],
-    form,
-    subtotal,
-    deliveryFee,
-    total,
+    form = {},
+    subtotal = 0,
+    deliveryFee = 0,
+    total = 0,
   } = location.state || {};
 
+  useEffect(() => {
+    if (!orderId) return;
+    const fetchOrder = async () => {
+      setLoading(true);
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axiosInstance.get(`/api/orders/${orderId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setOrder(res.data);
+      } catch (err) {
+        setError(
+          err.response?.data?.message || "Failed to fetch order details."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchOrder();
+  }, [orderId]);
+
   if (!location.state) {
-    navigate("/checkout");
-    return null;
+    return <div>Order information is missing.</div>;
   }
 
   const handleFileChange = (e) => {
@@ -125,27 +145,6 @@ export default function BankTransfer() {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (!orderId) return;
-    const fetchOrder = async () => {
-      setLoading(true);
-      try {
-        const token = localStorage.getItem("token");
-        const res = await axiosInstance.get(`/api/orders/${orderId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setOrder(res.data);
-      } catch (err) {
-        setError(
-          err.response?.data?.message || "Failed to fetch order details."
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchOrder();
-  }, [orderId]);
 
   const handleConfirmPayment = async () => {
     try {
