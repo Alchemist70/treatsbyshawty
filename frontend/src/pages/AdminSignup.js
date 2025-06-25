@@ -8,6 +8,7 @@ import {
   faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
 import Logo from "../assets/logo.png";
+import { API_URL } from "../config";
 
 export default function AdminSignup() {
   const [formData, setFormData] = useState({
@@ -41,7 +42,7 @@ export default function AdminSignup() {
     }
     setLoading(true);
     try {
-      const res = await fetch("/api/auth/register", {
+      const res = await fetch(`${API_URL}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
