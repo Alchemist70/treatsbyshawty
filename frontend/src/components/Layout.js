@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 
 const Layout = ({ children }) => {
   const location = useLocation();
+  const reduxUser = useSelector((state) => state.auth?.user);
 
   // Define routes that should have a clean layout (no header/footer)
   const cleanLayoutRoutes = [
@@ -32,7 +33,6 @@ const Layout = ({ children }) => {
   const isAdminPage = location.pathname.startsWith("/admin");
 
   // Get user from Redux or localStorage
-  const reduxUser = useSelector((state) => state.auth?.user);
   let user = reduxUser;
   if (!user) {
     try {
