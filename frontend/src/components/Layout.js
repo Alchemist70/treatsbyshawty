@@ -3,12 +3,9 @@ import { useLocation } from "react-router-dom";
 import Header from "./Header";
 import Marquee from "./Marquee";
 import Footer from "./Footer";
-import Sidebar from "./Sidebar";
-import { useSelector } from "react-redux";
 
 const Layout = ({ children }) => {
   const location = useLocation();
-  const reduxUser = useSelector((state) => state.auth?.user);
 
   // Define routes that should have a clean layout (no header/footer)
   const cleanLayoutRoutes = [
@@ -32,23 +29,12 @@ const Layout = ({ children }) => {
   // Check for admin layout
   const isAdminPage = location.pathname.startsWith("/admin");
 
-  // Get user from Redux or localStorage
-  let user = reduxUser;
-  if (!user) {
-    try {
-      user = JSON.parse(localStorage.getItem("user"));
-    } catch {
-      user = null;
-    }
-  }
-
   return (
     <div className="layout-container">
       <Header />
       {!isAdminPage && <Marquee />}
       <main>{children}</main>
       <Footer />
-      <Sidebar user={user} />
     </div>
   );
 };
