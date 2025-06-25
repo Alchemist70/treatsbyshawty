@@ -95,7 +95,6 @@ function AppContent() {
         <Route path="/admin/feedback" element={<AdminFeedback />} />
         <Route path="/admin/users" element={<AdminUserManagement />} />
       </Routes>
-      <Sidebar />
     </div>
   );
 }
