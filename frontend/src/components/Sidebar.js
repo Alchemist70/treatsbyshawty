@@ -73,6 +73,14 @@ export default function Sidebar({ user, isOpen, onClose, onLogout }) {
                 <FontAwesomeIcon icon={faInfoCircle} className="sidebar-icon" />
                 <span>Feedback</span>
               </Link>
+              <Link
+                to="/admin/users"
+                className="sidebar-link"
+                onClick={onClose}
+              >
+                <FontAwesomeIcon icon={faUserCircle} className="sidebar-icon" />
+                <span>User Management</span>
+              </Link>
             </>
           ) : (
             <>
