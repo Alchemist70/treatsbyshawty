@@ -3,7 +3,6 @@ import "../css/Admin.css";
 import "../css/AdminOrders.css";
 import axiosInstance from "../config";
 import { Link } from "react-router-dom";
-import { API_URL } from "../config";
 
 function StatusModal({ order, onSave, onClose, loading }) {
   // Only allow valid next statuses
@@ -182,7 +181,7 @@ export default function AdminOrders() {
                       <div className="order-receipt">
                         {order.paymentReceipt || order.receipt ? (
                           <a
-                            href={`${API_URL}/${
+                            href={`/uploads/${
                               order.paymentReceipt || order.receipt
                             }`}
                             target="_blank"

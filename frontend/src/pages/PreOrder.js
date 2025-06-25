@@ -36,6 +36,7 @@ export default function PreOrder() {
   const [depositPaid, setDepositPaid] = useState(false);
   const [paystackRef, setPaystackRef] = useState("");
   const [deliveryFee, setDeliveryFee] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   // Fetch menu products on mount
   useEffect(() => {

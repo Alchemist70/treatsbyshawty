@@ -6,10 +6,12 @@ import "../css/PaymentMethodSelection.css";
 export default function PaymentMethodSelection() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { cartItems, form, subtotal, deliveryFee, total } =
-    location.state || {};
+  const [selectedMethod, setSelectedMethod] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { order } = location.state || {};
 
-  if (!location.state) {
+  if (!order) {
     navigate("/checkout");
     return null;
   }
@@ -22,10 +24,6 @@ export default function PaymentMethodSelection() {
       navigate("/bank-transfer", { state: stateToPass });
     }
   };
-
-  const [selectedMethod, setSelectedMethod] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const handleOrderCreation = async (event) => {
     event.preventDefault();

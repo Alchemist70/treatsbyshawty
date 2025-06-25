@@ -176,7 +176,7 @@ export default function AdminPreOrders() {
                           {po.customOrder.image && (
                             <div>
                               <img
-                                src={`${API_URL}/${po.customOrder.image}`}
+                                src={`/uploads/${po.customOrder.image}`}
                                 alt="Custom"
                                 style={{
                                   width: 60,
@@ -211,7 +211,7 @@ export default function AdminPreOrders() {
                     <td>
                       {po.depositReceipt ? (
                         <a
-                          href={`${API_URL}/${po.depositReceipt}`}
+                          href={`/uploads/${po.depositReceipt}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="receipt-link"

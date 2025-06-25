@@ -6,6 +6,10 @@ import "../css/BankTransfer.css";
 export default function BankTransfer() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [order, setOrder] = useState(null);
+  const [orderId, setOrderId] = useState(location.state?.orderId || null);
   const {
     cartItems = [],
     form,
@@ -13,12 +17,6 @@ export default function BankTransfer() {
     deliveryFee,
     total,
   } = location.state || {};
-
-  const [receipt, setReceipt] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [order, setOrder] = useState(null);
-  const [orderId, setOrderId] = useState(null);
 
   if (!location.state) {
     navigate("/checkout");
@@ -128,6 +126,7 @@ export default function BankTransfer() {
   };
 
   useEffect(() => {
+    if (!orderId) return;
     const fetchOrder = async () => {
       setLoading(true);
       try {
@@ -144,7 +143,7 @@ export default function BankTransfer() {
         setLoading(false);
       }
     };
-    if (orderId) fetchOrder();
+    fetchOrder();
   }, [orderId]);
 
   const handleConfirmPayment = async () => {

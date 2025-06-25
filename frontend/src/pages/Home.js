@@ -347,7 +347,7 @@ export default function Home() {
                   src={
                     item.image.startsWith("http")
                       ? item.image
-                      : `${API_URL}/${item.image}`
+                      : `/uploads/${item.image}`
                   }
                   alt={item.title}
                   className="product-image"
@@ -384,7 +384,7 @@ export default function Home() {
                     (testimonial.image &&
                       (testimonial.image.startsWith("http")
                         ? testimonial.image
-                        : `${API_URL}/${testimonial.image}`)) ||
+                        : `/uploads/${testimonial.image}`)) ||
                     "/placeholder-avatar.png"
                   }
                   alt={testimonial.name}

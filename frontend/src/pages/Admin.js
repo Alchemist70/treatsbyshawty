@@ -813,7 +813,7 @@ export default function Admin() {
                                     src={
                                       item.image.startsWith("http")
                                         ? item.image
-                                        : `${API_URL}/${item.image}`
+                                        : `/uploads/${item.image}`
                                     }
                                     alt={item.title}
                                     className="showcase-admin-image"
@@ -1006,7 +1006,7 @@ export default function Admin() {
                                     src={
                                       t.image.startsWith("http")
                                         ? t.image
-                                        : `${API_URL}/${t.image}`
+                                        : `/uploads/${t.image}`
                                     }
                                     alt={t.name}
                                     className="testimonial-admin-image"
