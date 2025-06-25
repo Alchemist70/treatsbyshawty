@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../config";
 import "../css/PreOrder.css";
-import axios from "axios";
 
 const EVENT_TYPES = [
   "Birthday",
@@ -38,14 +38,21 @@ export default function PreOrder() {
   const [deliveryFee, setDeliveryFee] = useState(0);
 
   // Fetch menu products on mount
-  React.useEffect(() => {
+  useEffect(() => {
     setLoadingProducts(true);
-    axios
-      .get("/api/products")
-      .then((res) => setAllProducts(res.data))
-      .catch((err) => setError("Failed to load menu items."))
-      .finally(() => setLoadingProducts(false));
+    fetchMenuItems();
   }, []);
+
+  const fetchMenuItems = async () => {
+    try {
+      const res = await axiosInstance.get("/api/products?type=pre-order");
+      setMenuItems(res.data);
+    } catch (err) {
+      setError("Failed to fetch menu items. Please try again later.");
+    } finally {
+      setLoadingProducts(false);
+    }
+  };
 
   // Helper: min event date (5 days from now)
   const minEventDate = (() => {
@@ -154,7 +161,7 @@ export default function PreOrder() {
         }
         formData.append("items", JSON.stringify([]));
 
-        await axios.post("/api/preorders", formData, {
+        await axiosInstance.post("/api/preorders", formData, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -173,6 +180,62 @@ export default function PreOrder() {
       }
       setStep(3);
     }
+  };
+
+  const handleSubmit = async (e) => {
+    try {
+      setLoading(true);
+
+      const token = localStorage.getItem("token");
+      const payload = {
+        eventType: event.type,
+        eventDate: event.date,
+        eventLocation: event.location,
+        contact: event.contact,
+        notes: event.notes,
+        orderType: useCustom ? "Custom" : "Menu",
+        total: total,
+        deposit: deposit,
+        paymentMethod: "Card", // Assuming Card for simplicity
+        items: menuItems.map((i) => ({
+          product: i.product._id,
+          quantity: i.quantity,
+        })),
+        customOrder: useCustom
+          ? { description: customOrder.description }
+          : null,
+        customImage: useCustom ? customOrder.image : null,
+      };
+
+      const res = await axiosInstance.post("/api/preorders", payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (res.data.paymentMethod === "Card") {
+        navigate(`/preorder-deposit-payment/${res.data._id}`);
+      } else {
+        navigate(`/preorder-payment-bank/${res.data._id}`);
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to create pre-order.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCustomImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const imageUrl = e.target.result;
+      setCustomOrder((prev) => ({ ...prev, imageUrl }));
+    };
+    reader.readAsDataURL(file);
   };
 
   // UI
@@ -439,20 +502,7 @@ export default function PreOrder() {
               Back
             </button>
             <button
-              onClick={() =>
-                navigate("/preorder-payment-options", {
-                  state: {
-                    event,
-                    menuItems,
-                    customOrder,
-                    useCustom,
-                    subtotal,
-                    deliveryFee,
-                    total,
-                    deposit,
-                  },
-                })
-              }
+              onClick={handleSubmit}
               className="preorder-btn preorder-btn-primary"
               disabled={depositPaid || useCustom}
             >

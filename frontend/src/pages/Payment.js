@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../css/PaymentPage.css";
-import axios from "axios";
+import axiosInstance from "../config";
 import { PaystackButton } from "react-paystack";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
@@ -12,12 +12,18 @@ export default function Payment() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { form = {}, total = 0, cartItems = [] } = location.state || {};
+  const {
+    form = {},
+    total = 0,
+    cartItems = [],
+    orderId,
+  } = location.state || {};
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [step, setStep] = useState(1);
+  const [order, setOrder] = useState(null);
 
   useEffect(() => {
     if (!location.state || !cartItems.length) {
@@ -33,44 +39,21 @@ export default function Payment() {
     currency: "NGN",
   };
 
-  const handlePaymentSuccess = async (reference) => {
+  const fetchOrderDetails = async () => {
     setLoading(true);
-    setError("");
     try {
       const token = localStorage.getItem("token");
-      const orderPayload = {
-        ...location.state,
-        status: "paid",
-        paymentRef: reference.reference,
-        paymentType: "Card",
-      };
-      const items = orderPayload.cartItems.map((item) => ({
-        product: item.product._id,
-        quantity: item.quantity,
-        name: item.product.name,
-        price: item.product.price,
-        image: item.product.image,
-      }));
+      const res = await axiosInstance.get(`/api/orders/${orderId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const orderData = res.data;
+      setOrder(orderData);
 
-      const { data: newOrder } = await axios.post(
-        "/api/orders",
+      const paystackRes = await axiosInstance.post(
+        `/api/orders/${orderId}/create-payment-intent`,
+        {},
         {
-          items,
-          address: form.address,
-          phone: form.phone,
-          zip: form.zip,
-          city: form.city,
-          state: form.state,
-          subtotal: location.state.subtotal,
-          deliveryFee: location.state.deliveryFee,
-          total: location.state.total,
-          paymentMethod: "Card",
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
@@ -79,7 +62,7 @@ export default function Payment() {
 
       // Also clear the cart on the server
       try {
-        await axios.delete("/api/cart", {
+        await axiosInstance.delete("/api/cart", {
           headers: { Authorization: `Bearer ${token}` },
         });
       } catch (cartClearError) {
@@ -89,7 +72,7 @@ export default function Payment() {
 
       const orderSummary = {
         ...location.state,
-        orderId: newOrder._id,
+        orderId: orderData._id,
         payType: "Card",
       };
 
@@ -99,6 +82,19 @@ export default function Payment() {
       setError(err.response?.data?.message || "Payment verification failed.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePaystackSuccess = async (reference) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axiosInstance.put(
+        `/api/orders/${orderId}/pay`,
+        { reference },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+    } catch (err) {
+      setError(err.response?.data?.message || "Payment verification failed.");
     }
   };
 
@@ -116,7 +112,7 @@ export default function Payment() {
           <PaystackButton
             className="payment-action-btn primary"
             {...paystackConfig}
-            onSuccess={handlePaymentSuccess}
+            onSuccess={handlePaystackSuccess}
             onClose={() => setError("Payment was cancelled.")}
             text={`Pay Total ₦${total.toFixed(2)}`}
           />

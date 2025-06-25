@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
+import axiosInstance from "../config";
 import "../css/About.css";
-import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faClipboardList,
@@ -33,13 +33,29 @@ export default function About() {
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [content, setContent] = useState("");
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      setLoading(true);
+      try {
+        const res = await axiosInstance.get("/api/home-content");
+        setContent(res.data);
+      } catch (err) {
+        setError("Failed to load content.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchContent();
+  }, []);
 
   useEffect(() => {
     async function fetchTestimonials() {
       setLoading(true);
       setError("");
       try {
-        const { data } = await axios.get("/api/testimonials");
+        const { data } = await axiosInstance.get("/api/testimonials");
         setTestimonials(data);
       } catch (err) {
         setError("Could not load testimonials. Please try again later.");

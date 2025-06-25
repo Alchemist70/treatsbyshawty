@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
+import axiosInstance from "../config";
 import "../css/MyOrders.css";
-import axios from "axios";
 
 function ReviewModal({ product, orderId, onClose, onReviewSubmit }) {
   const [rating, setRating] = useState(0);
@@ -18,7 +18,7 @@ function ReviewModal({ product, orderId, onClose, onReviewSubmit }) {
     setError("");
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `/api/products/${product._id}/reviews`,
         { rating, comment, orderId },
         { headers: { Authorization: `Bearer ${token}` } }
@@ -95,7 +95,7 @@ function PreOrderFeedbackModal({ preOrderId, onClose, onFeedbackSubmit }) {
     setError("");
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `/api/preorders/${preOrderId}/feedback`,
         { rating, comment },
         { headers: { Authorization: `Bearer ${token}` } }
@@ -170,16 +170,10 @@ export default function MyOrders() {
     setError("");
     try {
       const token = localStorage.getItem("token");
-      const [res1, res2] = await Promise.all([
-        axios.get("/api/orders/my", {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        axios.get("/api/preorders/my", {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-      ]);
-      setOrders(res1.data);
-      setPreorders(res2.data);
+      const res = await axiosInstance.get("/api/orders", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setOrders(res.data);
     } catch (err) {
       setError(err.response?.data?.message || err.message);
     } finally {
@@ -190,7 +184,7 @@ export default function MyOrders() {
   const fetchUserReviews = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("/api/reviews/my", {
+      const res = await axiosInstance.get("/api/reviews/my", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUserReviews(res.data);
@@ -211,8 +205,30 @@ export default function MyOrders() {
       return;
     try {
       const token = localStorage.getItem("token");
-      await axios.put(
+      await axiosInstance.put(
         `/api/orders/${orderId}/cancel`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      fetchOrders(); // Refresh the list
+    } catch (err) {
+      alert(err.response?.data?.message || err.message);
+    }
+  };
+
+  const handleCancelPreOrder = async (preOrderId) => {
+    if (
+      !window.confirm(
+        "Are you sure you want to cancel this pre-order? This cannot be undone."
+      )
+    )
+      return;
+    try {
+      const token = localStorage.getItem("token");
+      await axiosInstance.put(
+        `/api/preorders/${preOrderId}/cancel`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },

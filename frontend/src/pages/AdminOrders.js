@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../css/Admin.css";
 import "../css/AdminOrders.css";
-import axios from "axios";
+import axiosInstance from "../config";
 import { Link } from "react-router-dom";
 import { API_URL } from "../config";
 
@@ -65,10 +65,10 @@ export default function AdminOrders() {
     setErrorOrders("");
     try {
       const token = localStorage.getItem("token");
-      const { data } = await axios.get("/api/orders", {
+      const res = await axiosInstance.get("/api/orders/all", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setOrders(data);
+      setOrders(res.data);
     } catch (err) {
       setErrorOrders(err.response?.data?.message || err.message);
     } finally {
@@ -84,15 +84,10 @@ export default function AdminOrders() {
     setUpdatingStatus(true);
     try {
       const token = localStorage.getItem("token");
-      await axios.put(
+      await axiosInstance.put(
         `/api/orders/${orderId}/status`,
         { status },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       setShowStatusModal(null);
       fetchOrders();
@@ -108,10 +103,10 @@ export default function AdminOrders() {
     if (!window.confirm("Are you sure you want to delete this order?")) return;
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`/api/orders/${orderId}`, {
+      await axiosInstance.delete(`/api/orders/${orderId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      fetchOrders();
+      setOrders(orders.filter((o) => o._id !== orderId));
     } catch (err) {
       alert(err.response?.data?.message || err.message);
     }

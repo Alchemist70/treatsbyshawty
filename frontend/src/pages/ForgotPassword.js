@@ -1,29 +1,23 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import "../css/Login.css"; // Reuse shared auth styles
-import axios from "axios";
+import { Link } from "react-router-dom";
+import axiosInstance from "../config";
+import "../css/Login.css"; // Reusing login styles for consistency
 import Logo from "../assets/logo.png";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setSuccess("");
-    setLoading(true);
+    setMessage("");
     try {
-      const res = await axios.post("/api/auth/forgot-password", { email });
-      // In a real app, the token would be sent via email.
-      // Here, we navigate directly to the reset page with the token.
-      setSuccess("Reset token generated. Redirecting...");
-      setTimeout(() => {
-        navigate(`/reset-password/${res.data.resetToken}`);
-      }, 1500);
+      setLoading(true);
+      await axiosInstance.post("/api/auth/forgot-password", { email });
+      setMessage("A password reset link has been sent to your email.");
     } catch (err) {
       setError(err.response?.data?.message || "An error occurred.");
     } finally {
@@ -35,20 +29,19 @@ export default function ForgotPassword() {
     <div className="auth-container">
       <div className="auth-card">
         <img src={Logo} alt="TreatsByShawty" className="auth-logo" />
-        <h2 className="auth-title">Forgot Your Password?</h2>
+        <h2 className="auth-title">Forgot Password</h2>
         <p className="auth-subtitle">
-          No problem! Enter your email below and we'll help you reset it.
+          Enter your email to receive a reset link.
         </p>
 
+        {message && <div className="auth-success">{message}</div>}
         {error && <div className="auth-error">{error}</div>}
-        {success && <div className="auth-success">{success}</div>}
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="input-group">
             <label htmlFor="email">Email Address</label>
             <input
               id="email"
-              name="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -63,7 +56,7 @@ export default function ForgotPassword() {
         </form>
 
         <div className="auth-switch-link">
-          Remember your password? <Link to="/login">Sign in</Link>
+          Remember your password? <Link to="/login">Sign In</Link>
         </div>
       </div>
     </div>

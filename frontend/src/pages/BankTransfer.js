@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axiosInstance from "../config";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
 import "../css/BankTransfer.css";
 
 export default function BankTransfer() {
@@ -17,6 +17,8 @@ export default function BankTransfer() {
   const [receipt, setReceipt] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [order, setOrder] = useState(null);
+  const [orderId, setOrderId] = useState(null);
 
   if (!location.state) {
     navigate("/checkout");
@@ -75,7 +77,7 @@ export default function BankTransfer() {
         total: total,
       };
 
-      const { data: order } = await axios.post(
+      const { data: order } = await axiosInstance.post(
         "/api/orders",
         orderData,
         config
@@ -84,9 +86,13 @@ export default function BankTransfer() {
       const receiptData = new FormData();
       receiptData.append("receipt", receipt);
 
-      await axios.post(`/api/orders/${order._id}/upload-receipt`, receiptData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axiosInstance.post(
+        `/api/orders/${order._id}/upload-receipt`,
+        receiptData,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       setLoading(false);
       localStorage.removeItem("cartItems");
@@ -94,7 +100,7 @@ export default function BankTransfer() {
 
       // Also clear the cart on the server
       try {
-        await axios.delete("/api/cart", {
+        await axiosInstance.delete("/api/cart", {
           headers: { Authorization: `Bearer ${token}` },
         });
       } catch (cartClearError) {
@@ -112,20 +118,48 @@ export default function BankTransfer() {
       };
 
       localStorage.setItem("latestOrderSummary", JSON.stringify(orderSummary));
-      navigate("/thank-you", {
-        state: {
-          orderId: order._id,
-          total: order.total,
-          cartItems: order.items,
-          payType: "Bank Transfer",
-          subtotal: order.subtotal,
-          deliveryFee: order.deliveryFee,
-        },
-      });
+      setOrderId(order._id);
     } catch (err) {
       setError(
         err.response?.data?.message || err.message || "An error occurred."
       );
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      setLoading(true);
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axiosInstance.get(`/api/orders/${orderId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setOrder(res.data);
+      } catch (err) {
+        setError(
+          err.response?.data?.message || "Failed to fetch order details."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (orderId) fetchOrder();
+  }, [orderId]);
+
+  const handleConfirmPayment = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      await axiosInstance.post(
+        `/api/orders/${orderId}/confirm-payment`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      navigate("/thank-you");
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to confirm payment.");
+    } finally {
       setLoading(false);
     }
   };

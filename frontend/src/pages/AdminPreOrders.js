@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../css/Admin.css";
 import "../css/AdminPreOrders.css";
-import axios from "axios";
-import { API_URL } from "../config";
+import axiosInstance from "../config";
 
 const STATUS_OPTIONS = [
   "pending",
@@ -47,10 +46,10 @@ export default function AdminPreOrders() {
     setError("");
     try {
       const token = localStorage.getItem("token");
-      const { data } = await axios.get("/api/preorders", {
+      const res = await axiosInstance.get("/api/preorders/all", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setPreorders(data);
+      setPreorders(res.data);
     } catch (err) {
       setError(err.response?.data?.message || err.message);
     } finally {
@@ -66,15 +65,10 @@ export default function AdminPreOrders() {
     setUpdating(id);
     try {
       const token = localStorage.getItem("token");
-      await axios.put(
+      await axiosInstance.put(
         `/api/preorders/${id}/status`,
         { status },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       fetchPreOrders();
     } catch (err) {
@@ -88,15 +82,10 @@ export default function AdminPreOrders() {
     setUpdating(id);
     try {
       const token = localStorage.getItem("token");
-      await axios.put(
+      await axiosInstance.put(
         `/api/preorders/${id}/status`,
         { depositPaid: true, status: "deposit-paid" },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       fetchPreOrders();
     } catch (err) {
@@ -111,7 +100,7 @@ export default function AdminPreOrders() {
     setUpdating(deletingPreOrder._id);
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`/api/preorders/${deletingPreOrder._id}`, {
+      await axiosInstance.delete(`/api/preorders/${deletingPreOrder._id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setDeletingPreOrder(null);

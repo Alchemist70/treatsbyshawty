@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import axiosInstance from "../config";
 import "../css/PaymentMethodSelection.css";
-import axios from "axios";
 
 export default function PaymentMethodSelection() {
   const location = useLocation();
@@ -20,6 +20,53 @@ export default function PaymentMethodSelection() {
       navigate("/payment", { state: stateToPass });
     } else if (method === "bank") {
       navigate("/bank-transfer", { state: stateToPass });
+    }
+  };
+
+  const [selectedMethod, setSelectedMethod] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleOrderCreation = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      const orderData = {
+        ...order,
+        paymentMethod: selectedMethod,
+        items: cartItems.map((item) => ({
+          product: item.product._id,
+          quantity: item.quantity,
+          price: item.product.price,
+        })),
+        shippingAddress: {
+          address: form.address,
+          city: form.city,
+          postalCode: form.zip,
+          country: "Nigeria",
+        },
+        totalPrice: total,
+      };
+
+      if (selectedMethod === "Card") {
+        const res = await axiosInstance.post("/api/orders", orderData, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        navigate(`/payment/${res.data._id}`);
+      } else if (selectedMethod === "Bank Transfer") {
+        const res = await axiosInstance.post("/api/orders", orderData, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        navigate(`/bank-transfer/${res.data._id}`);
+      }
+    } catch (err) {
+      setError(
+        err.response?.data?.message ||
+          "An error occurred while creating your order."
+      );
+    } finally {
+      setLoading(false);
     }
   };
 

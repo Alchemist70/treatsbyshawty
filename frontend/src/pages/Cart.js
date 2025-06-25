@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../css/Cart.css";
-import axios from "axios";
+import axiosInstance from "../config";
 
 function ConfirmModal({ message, onConfirm, onCancel }) {
   return (
@@ -33,6 +33,7 @@ export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
   const navigate = useNavigate();
   const [itemToDelete, setItemToDelete] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     try {
@@ -87,18 +88,7 @@ export default function Cart() {
     localStorage.setItem("cartItems", JSON.stringify(newCart));
     window.dispatchEvent(new Event("cart-updated"));
     // Sync with server
-    const token = localStorage.getItem("token");
-    if (token) {
-      axios
-        .put(
-          "/api/cart",
-          { cartItems: newCart },
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        )
-        .catch((err) => console.error("Failed to sync cart with server", err));
-    }
+    updateCartOnServer(newCart);
     setItemToDelete(null);
   };
 
@@ -115,18 +105,7 @@ export default function Cart() {
     localStorage.setItem("cartItems", JSON.stringify(newCart));
     window.dispatchEvent(new Event("cart-updated"));
     // Sync with server
-    const token = localStorage.getItem("token");
-    if (token) {
-      axios
-        .put(
-          "/api/cart",
-          { cartItems: newCart },
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        )
-        .catch((err) => console.error("Failed to sync cart with server", err));
-    }
+    updateCartOnServer(newCart);
   };
 
   const removeFromCart = (productId) => {
@@ -137,18 +116,68 @@ export default function Cart() {
     localStorage.setItem("cartItems", JSON.stringify(updatedCart));
     window.dispatchEvent(new Event("cart-updated"));
     // Sync with server
-    const token = localStorage.getItem("token");
-    if (token) {
-      axios
-        .delete(`/api/cart/${productId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        .catch((err) => console.error("Failed to sync cart with server", err));
-    }
+    updateCartOnServer(updatedCart);
   };
 
   const proceedToCheckout = () => {
     navigate("/checkout");
+  };
+
+  const fetchCartItems = async () => {
+    setLoading(true);
+    const token = localStorage.getItem("token");
+    if (token) {
+      // If logged in, fetch cart from backend
+      const res = await axiosInstance.get("/api/cart", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setCartItems(res.data);
+    } else {
+      // If not logged in, use local storage
+      try {
+        const localData = JSON.parse(localStorage.getItem("cartItems")) || [];
+        // Normalize cart items to ensure consistent structure { product: {}, quantity: X }
+        const normalizedCart = localData
+          .map((item) => {
+            if (item.product && item.product._id) {
+              // Already in correct format
+              return item;
+            }
+            // Is a flat product, needs normalization
+            const { quantity, ...productDetails } = item;
+            return { product: productDetails, quantity: quantity || 1 };
+          })
+          .filter(
+            (item) =>
+              item.product &&
+              item.product._id &&
+              item.product.name &&
+              typeof item.product.price === "number"
+          ); // Filter out any malformed items
+
+        setCartItems(normalizedCart);
+      } catch (e) {
+        console.error("Could not parse cart items from localStorage", e);
+        setCartItems([]);
+      }
+    }
+    setLoading(false);
+  };
+
+  const updateCartOnServer = async (updatedCart) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        await axiosInstance.put(
+          "/api/cart",
+          { cartItems: updatedCart },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      } catch (error) {
+        console.error("Failed to sync cart with server", error);
+        // Optional: notify user of sync failure
+      }
+    }
   };
 
   return (

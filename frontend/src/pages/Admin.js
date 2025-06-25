@@ -2,8 +2,7 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import "../css/Admin.css";
-import axios from "axios";
-import { API_URL } from "../config";
+import axiosInstance from "../config";
 import { Link } from "react-router-dom";
 
 export default function Admin() {
@@ -61,6 +60,9 @@ export default function Admin() {
   const testimonialImageRef = useRef();
   const [testimonialImageSource, setTestimonialImageSource] = useState("url"); // 'url' or 'upload'
 
+  const [stats, setStats] = useState({});
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const userStr = localStorage.getItem("user");
     if (userStr) {
@@ -75,21 +77,19 @@ export default function Admin() {
   }, []);
 
   useEffect(() => {
-    async function fetchStats() {
+    const fetchStats = async () => {
+      setLoading(true);
       try {
         const token = localStorage.getItem("token");
-        const config = { headers: { Authorization: `Bearer ${token}` } };
-        const [ordersRes, productsRes] = await Promise.all([
-          axios.get("/api/orders", config),
-          axios.get("/api/products", config),
-        ]);
-        setOrders(Array.isArray(ordersRes.data) ? ordersRes.data : []);
-        setProducts(Array.isArray(productsRes.data) ? productsRes.data : []);
-      } catch {
+        const res = await axiosInstance.get("/api/users/stats", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setStats(res.data);
+      } catch (err) {
         setOrders([]);
         setProducts([]);
       }
-    }
+    };
     fetchStats();
   }, []);
 
@@ -98,7 +98,7 @@ export default function Admin() {
     if (tab !== "story") return;
     setStoryLoading(true);
     setStoryError("");
-    axios
+    axiosInstance
       .get("/api/home-content")
       .then((res) => {
         setStory({
@@ -119,7 +119,7 @@ export default function Admin() {
     if (tab !== "showcase") return;
     setShowcaseLoading(true);
     setShowcaseError("");
-    axios
+    axiosInstance
       .get("/api/product-showcase")
       .then((res) => setShowcaseItems(res.data))
       .catch(() => setShowcaseError("Failed to load showcase items."))
@@ -131,7 +131,7 @@ export default function Admin() {
     if (tab !== "testimonials") return;
     setTestimonialsLoading(true);
     setTestimonialsError("");
-    axios
+    axiosInstance
       .get("/api/testimonials")
       .then((res) => setTestimonials(res.data))
       .catch(() => setTestimonialsError("Failed to load testimonials."))
@@ -149,7 +149,7 @@ export default function Admin() {
     const formData = new FormData();
     formData.append("image", file);
     const token = localStorage.getItem("token");
-    const res = await axios.post("/api/upload", formData, {
+    const res = await axiosInstance.post("/api/upload", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
@@ -172,7 +172,7 @@ export default function Admin() {
         imageUrl = await handleStoryImageUpload(file);
       }
       const token = localStorage.getItem("token");
-      await axios.put(
+      await axiosInstance.put(
         "/api/home-content",
         {
           ...story,
@@ -202,12 +202,16 @@ export default function Admin() {
     const formData = new FormData();
     formData.append("image", file);
     const token = localStorage.getItem("token");
-    const res = await axios.post("/api/product-showcase/upload", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const res = await axiosInstance.post(
+      "/api/product-showcase/upload",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return res.data.url;
   }
   async function handleShowcaseSubmit(e) {
@@ -227,7 +231,7 @@ export default function Admin() {
       const token = localStorage.getItem("token");
       if (showcaseForm._id) {
         // Edit
-        await axios.put(
+        await axiosInstance.put(
           `/api/product-showcase/${showcaseForm._id}`,
           { ...showcaseForm, image: imageUrl },
           { headers: { Authorization: `Bearer ${token}` } }
@@ -236,7 +240,7 @@ export default function Admin() {
       } else {
         // Add
         const { _id, ...newShowcaseItem } = showcaseForm;
-        await axios.post(
+        await axiosInstance.post(
           "/api/product-showcase",
           { ...newShowcaseItem, image: imageUrl },
           { headers: { Authorization: `Bearer ${token}` } }
@@ -244,7 +248,7 @@ export default function Admin() {
         setShowcaseSuccess("Added!");
       }
       // Refresh list
-      const res = await axios.get("/api/product-showcase");
+      const res = await axiosInstance.get("/api/product-showcase");
       setShowcaseItems(res.data);
       setShowcaseForm({
         _id: null,
@@ -277,7 +281,7 @@ export default function Admin() {
     if (!window.confirm("Delete this showcase item?")) return;
     const token = localStorage.getItem("token");
     try {
-      await axios.delete(`/api/product-showcase/${id}`, {
+      await axiosInstance.delete(`/api/product-showcase/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setShowcaseItems((prev) => prev.filter((i) => i._id !== id));
@@ -293,7 +297,7 @@ export default function Admin() {
     const formData = new FormData();
     formData.append("image", file);
     const token = localStorage.getItem("token");
-    const res = await axios.post("/api/testimonials/upload", formData, {
+    const res = await axiosInstance.post("/api/testimonials/upload", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
@@ -318,7 +322,7 @@ export default function Admin() {
       const token = localStorage.getItem("token");
       if (testimonialForm._id) {
         // Edit
-        await axios.put(
+        await axiosInstance.put(
           `/api/testimonials/${testimonialForm._id}`,
           { ...testimonialForm, image: imageUrl },
           { headers: { Authorization: `Bearer ${token}` } }
@@ -327,7 +331,7 @@ export default function Admin() {
       } else {
         // Add
         const { _id, ...newTestimonial } = testimonialForm;
-        await axios.post(
+        await axiosInstance.post(
           "/api/testimonials",
           { ...newTestimonial, image: imageUrl },
           { headers: { Authorization: `Bearer ${token}` } }
@@ -335,7 +339,7 @@ export default function Admin() {
         setTestimonialSuccess("Added!");
       }
       // Refresh list
-      const res = await axios.get("/api/testimonials");
+      const res = await axiosInstance.get("/api/testimonials");
       setTestimonials(res.data);
       setTestimonialForm({
         _id: null,
@@ -372,7 +376,7 @@ export default function Admin() {
     if (!window.confirm("Delete this testimonial?")) return;
     const token = localStorage.getItem("token");
     try {
-      await axios.delete(`/api/testimonials/${id}`, {
+      await axiosInstance.delete(`/api/testimonials/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setTestimonials((prev) => prev.filter((i) => i._id !== id));

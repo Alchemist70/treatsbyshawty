@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "../config";
 import "../css/Home.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
-import { API_URL } from "../config";
+import { Link } from "react-router-dom";
 
 const menuCategories = [
   {
@@ -35,6 +35,8 @@ export default function Home() {
   const [testimonialsLoading, setTestimonialsLoading] = useState(true);
   const [testimonialsError, setTestimonialsError] = useState("");
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const userStr = localStorage.getItem("user");
     if (userStr) {
@@ -44,37 +46,25 @@ export default function Home() {
     }
   }, []);
 
-  // Fetch Our Story
   useEffect(() => {
-    setStoryLoading(true);
-    setStoryError("");
-    axios
-      .get("/api/home-content")
-      .then((res) => setStory(res.data))
-      .catch(() => setStoryError("Failed to load story."))
-      .finally(() => setStoryLoading(false));
-  }, []);
+    const fetchHomeData = async () => {
+      setLoading(true);
+      try {
+        const contentRes = await axiosInstance.get("/api/home-content");
+        const showcaseRes = await axiosInstance.get("/api/product-showcase");
+        const testimonialsRes = await axiosInstance.get("/api/testimonials");
 
-  // Fetch Product Showcase
-  useEffect(() => {
-    setShowcaseLoading(true);
-    setShowcaseError("");
-    axios
-      .get("/api/product-showcase")
-      .then((res) => setShowcase(res.data))
-      .catch(() => setShowcaseError("Failed to load showcase."))
-      .finally(() => setShowcaseLoading(false));
-  }, []);
+        setStory(contentRes.data);
+        setShowcase(showcaseRes.data);
+        setTestimonials(testimonialsRes.data);
+      } catch (error) {
+        console.error("Failed to fetch homepage data", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Fetch Testimonials
-  useEffect(() => {
-    setTestimonialsLoading(true);
-    setTestimonialsError("");
-    axios
-      .get("/api/testimonials")
-      .then((res) => setTestimonials(res.data))
-      .catch(() => setTestimonialsError("Failed to load testimonials."))
-      .finally(() => setTestimonialsLoading(false));
+    fetchHomeData();
   }, []);
 
   return (
