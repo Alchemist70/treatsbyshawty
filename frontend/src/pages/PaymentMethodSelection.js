@@ -9,7 +9,8 @@ export default function PaymentMethodSelection() {
   const [selectedMethod, setSelectedMethod] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { order } = location.state || {};
+  const { order, cartItems, form, subtotal, deliveryFee, total } =
+    location.state || {};
 
   if (!order) {
     navigate("/checkout");

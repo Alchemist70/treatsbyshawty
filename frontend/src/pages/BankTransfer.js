@@ -10,6 +10,7 @@ export default function BankTransfer() {
   const [error, setError] = useState("");
   const [order, setOrder] = useState(null);
   const [orderId, setOrderId] = useState(location.state?.orderId || null);
+  const [receipt, setReceipt] = useState(null);
   const {
     cartItems = [],
     form,
