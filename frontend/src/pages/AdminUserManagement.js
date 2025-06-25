@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import "../css/AdminUserManagement.css";
 import { API_URL } from "../config";
 
@@ -8,7 +9,6 @@ const AdminUserManagement = () => {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  // Fallback to localStorage if redux is not set up
   const reduxToken = useSelector((state) => state.auth?.token);
   const reduxUser = useSelector((state) => state.auth?.user);
   const token = reduxToken || localStorage.getItem("token");
@@ -20,8 +20,22 @@ const AdminUserManagement = () => {
       user = null;
     }
   }
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if (!user) {
+      setTimeout(() => navigate("/login"), 1000);
+      setLoading(false);
+      setError(
+        "You must be logged in as an admin to view this page. Redirecting to login..."
+      );
+      return;
+    }
+    if (!user.isAdmin) {
+      setLoading(false);
+      setError("You do not have permission to view this page.");
+      return;
+    }
     const fetchUsers = async () => {
       setLoading(true);
       try {
@@ -39,16 +53,8 @@ const AdminUserManagement = () => {
         setLoading(false);
       }
     };
-    if (token && user && user.isAdmin) {
-      fetchUsers();
-    } else if (!user || !user.isAdmin) {
-      setLoading(false);
-      setError("You do not have permission to view this page.");
-    } else {
-      setLoading(false);
-      setError("Not authenticated.");
-    }
-  }, [token, user]);
+    fetchUsers();
+  }, [token, user, navigate]);
 
   const handleDelete = async (userId) => {
     if (
@@ -73,7 +79,6 @@ const AdminUserManagement = () => {
   return (
     <div className="admin-user-management">
       <h2>User Management</h2>
-      {/* Debug output for troubleshooting */}
       <div style={{ fontSize: 12, color: "#888", marginBottom: 8 }}>
         <div>
           <b>Debug:</b>
@@ -86,7 +91,7 @@ const AdminUserManagement = () => {
         <p>Loading users...</p>
       ) : error ? (
         <p className="error-message">{error}</p>
-      ) : user && user.isAdmin ? (
+      ) : (
         <table>
           <thead>
             <tr>
@@ -122,7 +127,7 @@ const AdminUserManagement = () => {
             )}
           </tbody>
         </table>
-      ) : null}
+      )}
     </div>
   );
 };
