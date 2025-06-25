@@ -385,29 +385,118 @@ export default function Admin() {
 
   return (
     <div className="admin-container">
-      <header className="admin-header">
-        <h1>Admin Dashboard</h1>
-        <nav className="admin-nav">
-          <Link to="/admin">Dashboard</Link>
-          <Link to="/admin/products">Products</Link>
-          <Link to="/admin/orders">Orders</Link>
-          <Link to="/admin/pre-orders">Pre-Orders</Link>
-          <Link to="/admin/feedback">Feedback</Link>
-          <Link to="/admin/users">User Management</Link>
-        </nav>
+      <header
+        className="admin-header"
+        style={{
+          background: "linear-gradient(90deg, #fbb6ce 0%, #fce7f3 100%)",
+          padding: "2rem 2.5rem 1.5rem 2.5rem",
+          borderRadius: "0 0 24px 24px",
+          boxShadow: "0 2px 12px #fbb6ce33",
+          marginBottom: 32,
+        }}
+      >
+        <h1
+          style={{
+            fontFamily: "Pacifico, cursive",
+            color: "#be185d",
+            fontSize: 38,
+            margin: 0,
+            letterSpacing: 1,
+          }}
+        >
+          Admin Dashboard
+        </h1>
       </header>
 
       <div className="admin-dashboard">
-        <div className="dashboard-summary">
-          <h2>Welcome, {user ? user.name : "Admin"}!</h2>
-          <div className="stats-grid">
-            <div className="stat-card">
-              <h3>Total Orders</h3>
-              <p>{orders.length}</p>
+        <div
+          className="dashboard-summary"
+          style={{
+            background: "#fff",
+            borderRadius: 16,
+            boxShadow: "0 2px 12px #fbb6ce22",
+            padding: "2rem 2rem 1.5rem 2rem",
+            margin: "0 auto 2rem auto",
+            maxWidth: 700,
+          }}
+        >
+          <h2
+            style={{
+              color: "#be185d",
+              fontWeight: 700,
+              fontSize: 26,
+              marginBottom: 8,
+            }}
+          >
+            Welcome, {user ? user.name : "Admin"}!
+          </h2>
+          <div
+            className="stats-grid"
+            style={{ display: "flex", gap: 32, marginTop: 16 }}
+          >
+            <div
+              className="stat-card"
+              style={{
+                flex: 1,
+                background: "#fce7f3",
+                borderRadius: 12,
+                padding: "1.5rem 1rem",
+                textAlign: "center",
+                boxShadow: "0 1px 6px #fbb6ce22",
+              }}
+            >
+              <h3
+                style={{
+                  color: "#be185d",
+                  fontWeight: 600,
+                  fontSize: 20,
+                  margin: 0,
+                }}
+              >
+                Total Orders
+              </h3>
+              <p
+                style={{
+                  fontSize: 32,
+                  fontWeight: 700,
+                  margin: "8px 0 0 0",
+                  color: "#d81b60",
+                }}
+              >
+                {orders.length}
+              </p>
             </div>
-            <div className="stat-card">
-              <h3>Total Products</h3>
-              <p>{products.length}</p>
+            <div
+              className="stat-card"
+              style={{
+                flex: 1,
+                background: "#fce7f3",
+                borderRadius: 12,
+                padding: "1.5rem 1rem",
+                textAlign: "center",
+                boxShadow: "0 1px 6px #fbb6ce22",
+              }}
+            >
+              <h3
+                style={{
+                  color: "#be185d",
+                  fontWeight: 600,
+                  fontSize: 20,
+                  margin: 0,
+                }}
+              >
+                Total Products
+              </h3>
+              <p
+                style={{
+                  fontSize: 32,
+                  fontWeight: 700,
+                  margin: "8px 0 0 0",
+                  color: "#d81b60",
+                }}
+              >
+                {products.length}
+              </p>
             </div>
           </div>
         </div>
