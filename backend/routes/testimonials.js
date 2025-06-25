@@ -3,7 +3,7 @@ const router = express.Router();
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
-const auth = require("../middleware/auth");
+const { auth } = require("../middleware/auth");
 const Testimonial = require("../models/Testimonial");
 
 // Multer storage for testimonial images

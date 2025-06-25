@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const auth = require("../middleware/auth");
+const { auth } = require("../middleware/auth");
 const HomeContent = require("../models/HomeContent");
 
 // A simple admin check middleware
