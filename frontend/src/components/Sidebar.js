@@ -14,7 +14,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "../css/Sidebar.css";
 
-export default function Sidebar({ user, isOpen, onClose, onLogout }) {
+export default function Sidebar({ user = {}, isOpen, onClose, onLogout }) {
   return (
     <>
       <div
@@ -23,13 +23,13 @@ export default function Sidebar({ user, isOpen, onClose, onLogout }) {
       ></div>
       <div className={`sidebar-container ${isOpen ? "open" : ""}`}>
         <div className="sidebar-header">
-          <h2 className="sidebar-title">Welcome, {user.name}</h2>
+          <h2 className="sidebar-title">Welcome, {user?.name || "Admin"}</h2>
           <button className="sidebar-close-btn" onClick={onClose}>
             <FontAwesomeIcon icon={faTimes} />
           </button>
         </div>
         <nav className="sidebar-nav">
-          {user.isAdmin ? (
+          {user?.isAdmin ? (
             <>
               <Link to="/admin" className="sidebar-link" onClick={onClose}>
                 <FontAwesomeIcon
