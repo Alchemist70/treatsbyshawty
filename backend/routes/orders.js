@@ -1,6 +1,7 @@
 const express = require("express");
 const Order = require("../models/Order");
-const { auth } = require("../middleware/auth");
+const auth = require("../middleware/auth");
+const { admin } = require("../middleware/auth");
 const multer = require("multer");
 const path = require("path");
 const Product = require("../models/Product");
@@ -38,16 +39,8 @@ const upload = multer({
   },
 });
 
-// Admin check middleware
-function isAdmin(req, res, next) {
-  if (!req.user || !req.user.isAdmin) {
-    return res.status(403).json({ message: "Admin access required" });
-  }
-  next();
-}
-
 // Get all orders (admin only)
-router.get("/", auth, isAdmin, async (req, res) => {
+router.get("/", auth, admin, async (req, res) => {
   try {
     const orders = await Order.find()
       .populate("user", "name email")
@@ -162,7 +155,7 @@ router.post("/", auth, async (req, res) => {
 });
 
 // Update order status (admin only)
-router.put("/:id/status", auth, isAdmin, async (req, res) => {
+router.put("/:id/status", auth, admin, async (req, res) => {
   try {
     const { status } = req.body;
     const order = await Order.findByIdAndUpdate(
@@ -224,7 +217,7 @@ router.put("/:id/cancel", auth, async (req, res) => {
 });
 
 // Delete order (admin only, only if older than 2 minutes for testing)
-router.delete("/:id", auth, isAdmin, async (req, res) => {
+router.delete("/:id", auth, admin, async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
     if (!order) return res.status(404).json({ message: "Order not found" });
