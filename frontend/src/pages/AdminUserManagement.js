@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import "../css/AdminUserManagement.css";
 import { API_URL } from "../config";
@@ -9,16 +8,15 @@ const AdminUserManagement = () => {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const reduxToken = useSelector((state) => state.auth?.token);
-  const reduxUser = useSelector((state) => state.auth?.user);
-  const token = reduxToken || localStorage.getItem("token");
-  let user = reduxUser;
-  if (!user) {
-    try {
-      user = JSON.parse(localStorage.getItem("user"));
-    } catch {
-      user = null;
-    }
+  // Use only localStorage for user and token
+  let token = null;
+  let user = null;
+  try {
+    token = localStorage.getItem("token");
+    user = JSON.parse(localStorage.getItem("user"));
+  } catch {
+    token = null;
+    user = null;
   }
   const navigate = useNavigate();
 
