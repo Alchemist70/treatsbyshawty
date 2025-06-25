@@ -391,42 +391,6 @@ export default function Admin() {
       </header>
 
       <main className="admin-main">
-        {/* Quick Stats */}
-        <div className="admin-stats">
-          <div className="stat-card">
-            <h2>{Array.isArray(orders) ? orders.length : 0}</h2>
-            <p>Total Orders</p>
-          </div>
-          <div className="stat-card">
-            <h2>{Array.isArray(products) ? products.length : 0}</h2>
-            <p>Total Products</p>
-          </div>
-        </div>
-
-        {/* Navigation Grid */}
-        <div className="admin-grid">
-          <Link to="/admin/products" className="admin-card">
-            <h3>Product Management</h3>
-            <p>Add, edit, and manage store products.</p>
-          </Link>
-          <Link to="/admin/orders" className="admin-card">
-            <h3>Order Fulfillment</h3>
-            <p>View and process customer orders.</p>
-          </Link>
-          <Link to="/admin/pre-orders" className="admin-card">
-            <h3>Pre-Order Management</h3>
-            <p>Manage all pre-order requests.</p>
-          </Link>
-          <Link to="/admin/feedback" className="admin-card">
-            <h3>Feedback & Reviews</h3>
-            <p>View and manage customer feedback.</p>
-          </Link>
-          <Link to="/admin/users" className="admin-card">
-            <h3>User Management</h3>
-            <p>View and manage user accounts.</p>
-          </Link>
-        </div>
-
         {/* Content Management Tabs */}
         <div className="admin-content-tabs">
           <button
@@ -459,11 +423,43 @@ export default function Admin() {
 
         {/* Tab Content */}
         {tab === "home" && (
-          <div
-            style={{ color: "#d81b60", fontWeight: 600, fontSize: "1.1rem" }}
-          >
-            Select a tab to manage homepage content.
-          </div>
+          <>
+            {/* Quick Stats */}
+            <div className="admin-stats">
+              <div className="stat-card">
+                <h2>{Array.isArray(orders) ? orders.length : 0}</h2>
+                <p>Total Orders</p>
+              </div>
+              <div className="stat-card">
+                <h2>{Array.isArray(products) ? products.length : 0}</h2>
+                <p>Total Products</p>
+              </div>
+            </div>
+
+            {/* Navigation Grid */}
+            <div className="admin-grid">
+              <Link to="/admin/products" className="admin-card">
+                <h3>Product Management</h3>
+                <p>Add, edit, and manage store products.</p>
+              </Link>
+              <Link to="/admin/orders" className="admin-card">
+                <h3>Order Fulfillment</h3>
+                <p>View and process customer orders.</p>
+              </Link>
+              <Link to="/admin/pre-orders" className="admin-card">
+                <h3>Pre-Order Management</h3>
+                <p>Manage all pre-order requests.</p>
+              </Link>
+              <Link to="/admin/feedback" className="admin-card">
+                <h3>Feedback & Reviews</h3>
+                <p>View and manage customer feedback.</p>
+              </Link>
+              <Link to="/admin/users" className="admin-card">
+                <h3>User Management</h3>
+                <p>View and manage user accounts.</p>
+              </Link>
+            </div>
+          </>
         )}
         {tab === "story" && (
           <div className="admin-section-card">
