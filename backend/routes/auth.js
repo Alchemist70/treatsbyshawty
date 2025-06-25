@@ -14,12 +14,10 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    if (isAdmin) {
-      if (!secretCode || secretCode !== process.env.ADMIN_SECRET_CODE) {
-        return res
-          .status(401)
-          .json({ message: "Invalid secret code for admin registration" });
-      }
+    if (isAdmin && secretCode !== process.env.ADMIN_SECRET_CODE) {
+      return res
+        .status(403)
+        .json({ message: "Invalid secret code for admin registration" });
     }
 
     const existing = await User.findOne({ email });

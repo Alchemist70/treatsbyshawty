@@ -10,7 +10,7 @@ import {
 import Logo from "../assets/logo.png";
 
 export default function AdminSignup() {
-  const [form, setForm] = useState({
+  const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
@@ -24,16 +24,18 @@ export default function AdminSignup() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
 
+  const { name, email, password, confirm, secretCode } = formData;
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((f) => ({ ...f, [name]: value }));
+    setFormData((f) => ({ ...f, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
-    if (form.password !== form.confirm) {
+    if (password !== confirm) {
       setError("Passwords do not match. Please try again.");
       return;
     }
@@ -43,11 +45,11 @@ export default function AdminSignup() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          password: form.password,
+          name,
+          email,
+          password,
+          secretCode,
           isAdmin: true,
-          secretCode: form.secretCode,
         }),
       });
       const data = await res.json();
@@ -83,7 +85,7 @@ export default function AdminSignup() {
               id="name"
               name="name"
               type="text"
-              value={form.name}
+              value={name}
               onChange={handleChange}
               required
               placeholder="e.g., Admin User"
@@ -95,7 +97,7 @@ export default function AdminSignup() {
               id="email"
               name="email"
               type="email"
-              value={form.email}
+              value={email}
               onChange={handleChange}
               required
               placeholder="admin@example.com"
@@ -108,7 +110,7 @@ export default function AdminSignup() {
                 id="password"
                 name="password"
                 type={showPassword ? "text" : "password"}
-                value={form.password}
+                value={password}
                 onChange={handleChange}
                 required
                 placeholder="••••••••"
@@ -128,7 +130,7 @@ export default function AdminSignup() {
                 id="confirm"
                 name="confirm"
                 type={showConfirmPassword ? "text" : "password"}
-                value={form.confirm}
+                value={confirm}
                 onChange={handleChange}
                 required
                 placeholder="••••••••"
@@ -144,15 +146,15 @@ export default function AdminSignup() {
             </div>
           </div>
           <div className="input-group">
-            <label htmlFor="secretCode">Admin Secret Code</label>
+            <label htmlFor="secretCode">Secret Code</label>
             <input
               id="secretCode"
               name="secretCode"
               type="password"
-              value={form.secretCode}
+              value={secretCode}
               onChange={handleChange}
               required
-              placeholder="Enter admin secret"
+              placeholder="••••••••"
             />
           </div>
           <button className="auth-btn" type="submit" disabled={loading}>

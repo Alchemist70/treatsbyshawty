@@ -15,18 +15,14 @@ const auth = (req, res, next) => {
   }
 };
 
-const adminAuth = (req, res, next) => {
-  auth(req, res, () => {
-    if (res.headersSent) {
-      return;
-    }
+module.exports = auth;
 
-    if (req.user && req.user.isAdmin) {
-      next();
-    } else {
-      res.status(403).json({ message: "Forbidden: Admin access required" });
-    }
-  });
+const admin = (req, res, next) => {
+  if (req.user && req.user.isAdmin) {
+    next();
+  } else {
+    res.status(403).json({ message: "Admin access required" });
+  }
 };
 
-module.exports = { auth, adminAuth };
+module.exports.admin = admin;

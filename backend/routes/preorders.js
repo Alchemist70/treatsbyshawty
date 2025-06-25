@@ -1,7 +1,7 @@
 const express = require("express");
 const PreOrder = require("../models/PreOrder");
 const Product = require("../models/Product");
-const { auth } = require("../middleware/auth");
+const auth = require("../middleware/auth");
 const multer = require("multer");
 const path = require("path");
 const axios = require("axios");

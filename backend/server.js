@@ -39,14 +39,15 @@ app.use("/api/home-content", require("./routes/homeContent"));
 app.use("/api/product-showcase", require("./routes/productShowcase"));
 app.use("/api/testimonials", require("./routes/testimonials"));
 app.use("/api/cart", require("./routes/cart"));
-app.use("/api", require("./routes/index"));
 app.use("/api/users", require("./routes/users"));
-
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static("frontend/build"));
-}
+app.use("/api", require("./routes/index"));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+// Serve frontend
+if (process.env.NODE_ENV === "production") {
+  // ... existing code ...
+}

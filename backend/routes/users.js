@@ -1,13 +1,14 @@
 const express = require("express");
 const User = require("../models/User");
-const { adminAuth } = require("../middleware/auth");
+const auth = require("../middleware/auth");
+const { admin } = require("../middleware/auth");
 
 const router = express.Router();
 
 // @route   GET api/users
 // @desc    Get all users
 // @access  Private/Admin
-router.get("/", adminAuth, async (req, res) => {
+router.get("/", [auth, admin], async (req, res) => {
   try {
     const users = await User.find().select("-password");
     res.json(users);
@@ -20,7 +21,7 @@ router.get("/", adminAuth, async (req, res) => {
 // @route   DELETE api/users/:id
 // @desc    Delete a user
 // @access  Private/Admin
-router.delete("/:id", adminAuth, async (req, res) => {
+router.delete("/:id", [auth, admin], async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
 
@@ -28,7 +29,7 @@ router.delete("/:id", adminAuth, async (req, res) => {
       return res.status(404).json({ msg: "User not found" });
     }
 
-    await user.remove();
+    await user.deleteOne();
 
     res.json({ msg: "User removed" });
   } catch (err) {

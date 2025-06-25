@@ -387,564 +387,554 @@ export default function Admin() {
     <div className="admin-container">
       <header className="admin-header">
         <h1>Admin Dashboard</h1>
-        <p>Welcome, {user ? user.name : "Admin"}. Manage your store here.</p>
+        <nav className="admin-nav">
+          <Link to="/admin">Dashboard</Link>
+          <Link to="/admin/products">Products</Link>
+          <Link to="/admin/orders">Orders</Link>
+          <Link to="/admin/pre-orders">Pre-Orders</Link>
+          <Link to="/admin/feedback">Feedback</Link>
+          <Link to="/admin/users">User Management</Link>
+        </nav>
       </header>
 
-      <main className="admin-main">
-        {/* Content Management Tabs */}
-        <div className="admin-content-tabs">
-          <button
-            className={tab === "home" ? "admin-tab-active" : "admin-tab"}
-            onClick={() => setTab("home")}
-          >
-            Dashboard
-          </button>
-          <button
-            className={tab === "story" ? "admin-tab-active" : "admin-tab"}
-            onClick={() => setTab("story")}
-          >
-            Our Story
-          </button>
-          <button
-            className={tab === "showcase" ? "admin-tab-active" : "admin-tab"}
-            onClick={() => setTab("showcase")}
-          >
-            Product Showcase
-          </button>
-          <button
-            className={
-              tab === "testimonials" ? "admin-tab-active" : "admin-tab"
-            }
-            onClick={() => setTab("testimonials")}
-          >
-            Testimonials
-          </button>
+      <div className="admin-dashboard">
+        <div className="dashboard-summary">
+          <h2>Welcome, {user ? user.name : "Admin"}!</h2>
+          <div className="stats-grid">
+            <div className="stat-card">
+              <h3>Total Orders</h3>
+              <p>{orders.length}</p>
+            </div>
+            <div className="stat-card">
+              <h3>Total Products</h3>
+              <p>{products.length}</p>
+            </div>
+          </div>
         </div>
-
-        {/* Tab Content */}
-        {tab === "home" && (
-          <>
-            {/* Quick Stats */}
-            <div className="admin-stats">
-              <div className="stat-card">
-                <h2>{Array.isArray(orders) ? orders.length : 0}</h2>
-                <p>Total Orders</p>
-              </div>
-              <div className="stat-card">
-                <h2>{Array.isArray(products) ? products.length : 0}</h2>
-                <p>Total Products</p>
-              </div>
+        <div className="dashboard-management-tabs">
+          <div className="tabs">
+            <button
+              className={tab === "home" ? "admin-tab-active" : "admin-tab"}
+              onClick={() => setTab("home")}
+            >
+              Dashboard
+            </button>
+            <button
+              className={tab === "story" ? "admin-tab-active" : "admin-tab"}
+              onClick={() => setTab("story")}
+            >
+              Our Story
+            </button>
+            <button
+              className={tab === "showcase" ? "admin-tab-active" : "admin-tab"}
+              onClick={() => setTab("showcase")}
+            >
+              Product Showcase
+            </button>
+            <button
+              className={
+                tab === "testimonials" ? "admin-tab-active" : "admin-tab"
+              }
+              onClick={() => setTab("testimonials")}
+            >
+              Testimonials
+            </button>
+          </div>
+          {/* Tab Content */}
+          {tab === "home" && (
+            <div
+              style={{ color: "#d81b60", fontWeight: 600, fontSize: "1.1rem" }}
+            >
+              Select a tab to manage homepage content.
             </div>
-
-            {/* Navigation Grid */}
-            <div className="admin-grid">
-              <Link to="/admin/products" className="admin-card">
-                <h3>Product Management</h3>
-                <p>Add, edit, and manage store products.</p>
-              </Link>
-              <Link to="/admin/orders" className="admin-card">
-                <h3>Order Fulfillment</h3>
-                <p>View and process customer orders.</p>
-              </Link>
-              <Link to="/admin/pre-orders" className="admin-card">
-                <h3>Pre-Order Management</h3>
-                <p>Manage all pre-order requests.</p>
-              </Link>
-              <Link to="/admin/feedback" className="admin-card">
-                <h3>Feedback & Reviews</h3>
-                <p>View and manage customer feedback.</p>
-              </Link>
-              <Link to="/admin/users" className="admin-card">
-                <h3>User Management</h3>
-                <p>View and manage user accounts.</p>
-              </Link>
-            </div>
-          </>
-        )}
-        {tab === "story" && (
-          <div className="admin-section-card">
-            <h2>Edit Our Story</h2>
-            {storyLoading ? (
-              <div className="loading-state">Loading...</div>
-            ) : (
-              <form onSubmit={handleStorySubmit}>
-                <div className="form-field">
-                  <label>Title</label>
-                  <input
-                    type="text"
-                    className="admin-input"
-                    name="title"
-                    value={story.title}
-                    onChange={handleStoryChange}
-                  />
-                </div>
-                <div className="form-field">
-                  <label>Subtitle</label>
-                  <input
-                    type="text"
-                    className="admin-input"
-                    name="subtitle"
-                    value={story.subtitle}
-                    onChange={handleStoryChange}
-                  />
-                </div>
-                <div className="form-field">
-                  <label>Image</label>
-                  <input
-                    type="file"
-                    ref={storyImageRef}
-                    className="admin-input"
-                    accept="image/*"
-                  />
-                  {story.image && (
-                    <div className="image-preview-container">
-                      <img
-                        src={story.image}
-                        alt="Story Preview"
-                        className="image-preview"
+          )}
+          {tab === "story" && (
+            <div className="admin-section-card">
+              <h2>Edit Our Story</h2>
+              {storyLoading ? (
+                <div className="loading-state">Loading...</div>
+              ) : (
+                <form onSubmit={handleStorySubmit}>
+                  <div className="form-field">
+                    <label>Title</label>
+                    <input
+                      type="text"
+                      className="admin-input"
+                      name="title"
+                      value={story.title}
+                      onChange={handleStoryChange}
+                    />
+                  </div>
+                  <div className="form-field">
+                    <label>Subtitle</label>
+                    <input
+                      type="text"
+                      className="admin-input"
+                      name="subtitle"
+                      value={story.subtitle}
+                      onChange={handleStoryChange}
+                    />
+                  </div>
+                  <div className="form-field">
+                    <label>Image</label>
+                    <input
+                      type="file"
+                      ref={storyImageRef}
+                      className="admin-input"
+                      accept="image/*"
+                    />
+                    {story.image && (
+                      <div className="image-preview-container">
+                        <img
+                          src={story.image}
+                          alt="Story Preview"
+                          className="image-preview"
+                        />
+                      </div>
+                    )}
+                  </div>
+                  <div className="form-field">
+                    <label>Text</label>
+                    <textarea
+                      className="admin-input"
+                      rows={4}
+                      name="text"
+                      value={story.text}
+                      onChange={handleStoryChange}
+                    />
+                  </div>
+                  <div className="button-row">
+                    <div className="form-field">
+                      <label>Button Text</label>
+                      <input
+                        type="text"
+                        className="admin-input"
+                        name="buttonText"
+                        value={story.buttonText}
+                        onChange={handleStoryChange}
                       />
                     </div>
-                  )}
-                </div>
-                <div className="form-field">
-                  <label>Text</label>
-                  <textarea
-                    className="admin-input"
-                    rows={4}
-                    name="text"
-                    value={story.text}
-                    onChange={handleStoryChange}
-                  />
-                </div>
-                <div className="button-row">
-                  <div className="form-field">
-                    <label>Button Text</label>
-                    <input
-                      type="text"
-                      className="admin-input"
-                      name="buttonText"
-                      value={story.buttonText}
-                      onChange={handleStoryChange}
-                    />
-                  </div>
-                  <div className="form-field">
-                    <label>Button Link</label>
-                    <input
-                      type="text"
-                      className="admin-input"
-                      name="buttonLink"
-                      value={story.buttonLink}
-                      onChange={handleStoryChange}
-                    />
-                  </div>
-                </div>
-                <button
-                  className="save-button"
-                  type="submit"
-                  disabled={storySaving}
-                >
-                  {storySaving ? "Saving..." : "Save"}
-                </button>
-                {storySuccess && (
-                  <div style={{ color: "#059669", marginTop: 12 }}>
-                    {storySuccess}
-                  </div>
-                )}
-                {storyError && (
-                  <div style={{ color: "#be185d", marginTop: 12 }}>
-                    {storyError}
-                  </div>
-                )}
-              </form>
-            )}
-          </div>
-        )}
-        {tab === "showcase" && (
-          <div
-            className="admin-section-card"
-            style={{
-              background: "#fff",
-              borderRadius: 16,
-              boxShadow: "0 2px 12px #fbb6ce22",
-              padding: "2.5rem 2rem",
-              margin: "0 auto",
-              maxWidth: 700,
-            }}
-          >
-            <h2
-              style={{
-                color: "#be185d",
-                fontWeight: 700,
-                fontSize: 22,
-                marginBottom: 18,
-              }}
-            >
-              Manage Product Showcase
-            </h2>
-            {showcaseLoading ? (
-              <div style={{ color: "#be185d", fontWeight: 600 }}>
-                Loading...
-              </div>
-            ) : (
-              <>
-                <form
-                  onSubmit={handleShowcaseSubmit}
-                  style={{ marginBottom: 24 }}
-                >
-                  <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
-                    <input
-                      type="text"
-                      name="title"
-                      placeholder="Title"
-                      className="admin-input"
-                      style={{ flex: 2 }}
-                      value={showcaseForm.title}
-                      onChange={handleShowcaseFormChange}
-                    />
-                    <input
-                      type="text"
-                      name="subtitle"
-                      placeholder="Subtitle"
-                      className="admin-input"
-                      style={{ flex: 2 }}
-                      value={showcaseForm.subtitle}
-                      onChange={handleShowcaseFormChange}
-                    />
-                    <input
-                      type="number"
-                      name="order"
-                      placeholder="Order"
-                      className="admin-input"
-                      style={{ width: 80 }}
-                      value={showcaseForm.order}
-                      onChange={handleShowcaseFormChange}
-                    />
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 4,
-                      }}
-                    >
-                      <div>
-                        <label>
-                          <input
-                            type="radio"
-                            name="showcaseImageSource"
-                            value="url"
-                            checked={showcaseImageSource === "url"}
-                            onChange={() => setShowcaseImageSource("url")}
-                          />
-                          Image URL
-                        </label>
-                        <label style={{ marginLeft: 8 }}>
-                          <input
-                            type="radio"
-                            name="showcaseImageSource"
-                            value="upload"
-                            checked={showcaseImageSource === "upload"}
-                            onChange={() => setShowcaseImageSource("upload")}
-                          />
-                          Upload Image
-                        </label>
-                      </div>
-                      {showcaseImageSource === "url" ? (
-                        <input
-                          type="text"
-                          name="image"
-                          placeholder="Image URL"
-                          className="admin-input"
-                          value={showcaseForm.image}
-                          onChange={handleShowcaseFormChange}
-                          style={{ width: 180 }}
-                        />
-                      ) : (
-                        <input
-                          type="file"
-                          ref={showcaseImageRef}
-                          className="admin-input"
-                          style={{ width: 180 }}
-                          accept="image/*"
-                        />
-                      )}
+                    <div className="form-field">
+                      <label>Button Link</label>
+                      <input
+                        type="text"
+                        className="admin-input"
+                        name="buttonLink"
+                        value={story.buttonLink}
+                        onChange={handleStoryChange}
+                      />
                     </div>
                   </div>
                   <button
-                    className="signup-btn"
+                    className="save-button"
                     type="submit"
-                    disabled={showcaseSaving}
+                    disabled={storySaving}
                   >
-                    {showcaseForm._id ? "Update" : "Add"}
+                    {storySaving ? "Saving..." : "Save"}
                   </button>
-                  {showcaseSuccess && (
-                    <span style={{ color: "#059669", marginLeft: 16 }}>
-                      {showcaseSuccess}
-                    </span>
+                  {storySuccess && (
+                    <div style={{ color: "#059669", marginTop: 12 }}>
+                      {storySuccess}
+                    </div>
                   )}
-                  {showcaseError && (
-                    <span style={{ color: "#be185d", marginLeft: 16 }}>
-                      {showcaseError}
-                    </span>
+                  {storyError && (
+                    <div style={{ color: "#be185d", marginTop: 12 }}>
+                      {storyError}
+                    </div>
                   )}
                 </form>
-                <div>
-                  {showcaseItems.length === 0 ? (
-                    <div style={{ color: "#be185d", fontWeight: 600 }}>
-                      No showcase items.
-                    </div>
-                  ) : (
-                    <table
-                      style={{ width: "100%", borderCollapse: "collapse" }}
-                    >
-                      <thead>
-                        <tr style={{ background: "#fce7f3" }}>
-                          <th style={{ padding: 8 }}>Image</th>
-                          <th style={{ padding: 8 }}>Title</th>
-                          <th style={{ padding: 8 }}>Subtitle</th>
-                          <th style={{ padding: 8 }}>Order</th>
-                          <th style={{ padding: 8 }}>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {showcaseItems.map((item) => (
-                          <tr
-                            key={item._id}
-                            style={{ borderBottom: "1px solid #f3f4f6" }}
-                          >
-                            <td style={{ padding: 8 }}>
-                              {item.image && (
-                                <img
-                                  src={
-                                    item.image.startsWith("http")
-                                      ? item.image
-                                      : `${API_URL}/${item.image}`
-                                  }
-                                  alt={item.title}
-                                  className="showcase-admin-image"
-                                />
-                              )}
-                            </td>
-                            <td style={{ padding: 8 }}>{item.title}</td>
-                            <td style={{ padding: 8 }}>{item.subtitle}</td>
-                            <td style={{ padding: 8 }}>{item.order}</td>
-                            <td style={{ padding: 8 }}>
-                              <button
-                                className="admin-tab"
-                                style={{ marginRight: 8 }}
-                                onClick={() => handleShowcaseEdit(item)}
-                              >
-                                Edit
-                              </button>
-                              <button
-                                className="admin-tab"
-                                style={{ color: "#be185d" }}
-                                onClick={() => handleShowcaseDelete(item._id)}
-                              >
-                                Delete
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  )}
-                </div>
-              </>
-            )}
-          </div>
-        )}
-        {tab === "testimonials" && (
-          <div
-            className="admin-section-card"
-            style={{
-              background: "#fff",
-              borderRadius: 16,
-              boxShadow: "0 2px 12px #fbb6ce22",
-              padding: "2.5rem 2rem",
-              margin: "0 auto",
-              maxWidth: 700,
-            }}
-          >
-            <h2
+              )}
+            </div>
+          )}
+          {tab === "showcase" && (
+            <div
+              className="admin-section-card"
               style={{
-                color: "#be185d",
-                fontWeight: 700,
-                fontSize: 22,
-                marginBottom: 18,
+                background: "#fff",
+                borderRadius: 16,
+                boxShadow: "0 2px 12px #fbb6ce22",
+                padding: "2.5rem 2rem",
+                margin: "0 auto",
+                maxWidth: 700,
               }}
             >
-              Manage Testimonials
-            </h2>
-            {testimonialsLoading ? (
-              <div style={{ color: "#be185d", fontWeight: 600 }}>
-                Loading...
-              </div>
-            ) : (
-              <>
-                <form
-                  onSubmit={handleTestimonialSubmit}
-                  style={{ marginBottom: 24 }}
-                >
-                  <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
-                    <input
-                      type="text"
-                      name="name"
-                      placeholder="Name"
-                      className="admin-input"
-                      style={{ flex: 1 }}
-                      value={testimonialForm.name}
-                      onChange={handleTestimonialFormChange}
-                    />
-                    <input
-                      type="number"
-                      name="order"
-                      placeholder="Order"
-                      className="admin-input"
-                      style={{ width: 80 }}
-                      value={testimonialForm.order}
-                      onChange={handleTestimonialFormChange}
-                    />
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 4,
-                      }}
-                    >
-                      <div>
-                        <label>
-                          <input
-                            type="radio"
-                            name="testimonialImageSource"
-                            value="url"
-                            checked={testimonialImageSource === "url"}
-                            onChange={() => setTestimonialImageSource("url")}
-                          />
-                          Image URL
-                        </label>
-                        <label style={{ marginLeft: 8 }}>
-                          <input
-                            type="radio"
-                            name="testimonialImageSource"
-                            value="upload"
-                            checked={testimonialImageSource === "upload"}
-                            onChange={() => setTestimonialImageSource("upload")}
-                          />
-                          Upload Image
-                        </label>
-                      </div>
-                      {testimonialImageSource === "url" ? (
-                        <input
-                          type="text"
-                          name="image"
-                          placeholder="Image URL"
-                          className="admin-input"
-                          value={testimonialForm.image}
-                          onChange={handleTestimonialFormChange}
-                          style={{ width: 180 }}
-                        />
-                      ) : (
-                        <input
-                          type="file"
-                          ref={testimonialImageRef}
-                          className="admin-input"
-                          style={{ width: 180 }}
-                          accept="image/*"
-                        />
-                      )}
-                    </div>
-                  </div>
-                  <textarea
-                    name="text"
-                    placeholder="Testimonial text"
-                    className="admin-input"
-                    style={{ width: "100%", marginBottom: 8 }}
-                    rows={2}
-                    value={testimonialForm.text}
-                    onChange={handleTestimonialFormChange}
-                  />
-                  <button
-                    className="signup-btn"
-                    type="submit"
-                    disabled={testimonialSaving}
-                  >
-                    {testimonialForm._id ? "Update" : "Add"}
-                  </button>
-                  {testimonialSuccess && (
-                    <span style={{ color: "green", marginLeft: 16 }}>
-                      {testimonialSuccess}
-                    </span>
-                  )}
-                  {testimonialsError && (
-                    <span style={{ color: "#be185d", marginLeft: 16 }}>
-                      {testimonialsError}
-                    </span>
-                  )}
-                </form>
-                <div>
-                  {testimonials.length === 0 ? (
-                    <div style={{ color: "#be185d", fontWeight: 600 }}>
-                      No testimonials.
-                    </div>
-                  ) : (
-                    <table
-                      style={{ width: "100%", borderCollapse: "collapse" }}
-                    >
-                      <thead>
-                        <tr style={{ background: "#fce7f3" }}>
-                          <th style={{ padding: 8 }}>Image</th>
-                          <th style={{ padding: 8 }}>Name</th>
-                          <th style={{ padding: 8 }}>Text</th>
-                          <th style={{ padding: 8 }}>Order</th>
-                          <th style={{ padding: 8 }}>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {testimonials.map((t) => (
-                          <tr key={t._id}>
-                            <td>
-                              {t.image && (
-                                <img
-                                  src={
-                                    t.image.startsWith("http")
-                                      ? t.image
-                                      : `${API_URL}/${t.image}`
-                                  }
-                                  alt={t.name}
-                                  className="testimonial-admin-image"
-                                />
-                              )}
-                            </td>
-                            <td>{t.name}</td>
-                            <td>{t.text}</td>
-                            <td>{t.order}</td>
-                            <td>
-                              <button
-                                className="admin-tab"
-                                style={{ marginRight: 8 }}
-                                onClick={() => handleTestimonialEdit(t)}
-                              >
-                                Edit
-                              </button>
-                              <button
-                                className="admin-tab"
-                                style={{ color: "#be185d" }}
-                                onClick={() => handleTestimonialDelete(t._id)}
-                              >
-                                Delete
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  )}
+              <h2
+                style={{
+                  color: "#be185d",
+                  fontWeight: 700,
+                  fontSize: 22,
+                  marginBottom: 18,
+                }}
+              >
+                Manage Product Showcase
+              </h2>
+              {showcaseLoading ? (
+                <div style={{ color: "#be185d", fontWeight: 600 }}>
+                  Loading...
                 </div>
-              </>
-            )}
-          </div>
-        )}
-      </main>
+              ) : (
+                <>
+                  <form
+                    onSubmit={handleShowcaseSubmit}
+                    style={{ marginBottom: 24 }}
+                  >
+                    <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
+                      <input
+                        type="text"
+                        name="title"
+                        placeholder="Title"
+                        className="admin-input"
+                        style={{ flex: 2 }}
+                        value={showcaseForm.title}
+                        onChange={handleShowcaseFormChange}
+                      />
+                      <input
+                        type="text"
+                        name="subtitle"
+                        placeholder="Subtitle"
+                        className="admin-input"
+                        style={{ flex: 2 }}
+                        value={showcaseForm.subtitle}
+                        onChange={handleShowcaseFormChange}
+                      />
+                      <input
+                        type="number"
+                        name="order"
+                        placeholder="Order"
+                        className="admin-input"
+                        style={{ width: 80 }}
+                        value={showcaseForm.order}
+                        onChange={handleShowcaseFormChange}
+                      />
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 4,
+                        }}
+                      >
+                        <div>
+                          <label>
+                            <input
+                              type="radio"
+                              name="showcaseImageSource"
+                              value="url"
+                              checked={showcaseImageSource === "url"}
+                              onChange={() => setShowcaseImageSource("url")}
+                            />
+                            Image URL
+                          </label>
+                          <label style={{ marginLeft: 8 }}>
+                            <input
+                              type="radio"
+                              name="showcaseImageSource"
+                              value="upload"
+                              checked={showcaseImageSource === "upload"}
+                              onChange={() => setShowcaseImageSource("upload")}
+                            />
+                            Upload Image
+                          </label>
+                        </div>
+                        {showcaseImageSource === "url" ? (
+                          <input
+                            type="text"
+                            name="image"
+                            placeholder="Image URL"
+                            className="admin-input"
+                            value={showcaseForm.image}
+                            onChange={handleShowcaseFormChange}
+                            style={{ width: 180 }}
+                          />
+                        ) : (
+                          <input
+                            type="file"
+                            ref={showcaseImageRef}
+                            className="admin-input"
+                            style={{ width: 180 }}
+                            accept="image/*"
+                          />
+                        )}
+                      </div>
+                    </div>
+                    <button
+                      className="signup-btn"
+                      type="submit"
+                      disabled={showcaseSaving}
+                    >
+                      {showcaseForm._id ? "Update" : "Add"}
+                    </button>
+                    {showcaseSuccess && (
+                      <span style={{ color: "#059669", marginLeft: 16 }}>
+                        {showcaseSuccess}
+                      </span>
+                    )}
+                    {showcaseError && (
+                      <span style={{ color: "#be185d", marginLeft: 16 }}>
+                        {showcaseError}
+                      </span>
+                    )}
+                  </form>
+                  <div>
+                    {showcaseItems.length === 0 ? (
+                      <div style={{ color: "#be185d", fontWeight: 600 }}>
+                        No showcase items.
+                      </div>
+                    ) : (
+                      <table
+                        style={{ width: "100%", borderCollapse: "collapse" }}
+                      >
+                        <thead>
+                          <tr style={{ background: "#fce7f3" }}>
+                            <th style={{ padding: 8 }}>Image</th>
+                            <th style={{ padding: 8 }}>Title</th>
+                            <th style={{ padding: 8 }}>Subtitle</th>
+                            <th style={{ padding: 8 }}>Order</th>
+                            <th style={{ padding: 8 }}>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {showcaseItems.map((item) => (
+                            <tr
+                              key={item._id}
+                              style={{ borderBottom: "1px solid #f3f4f6" }}
+                            >
+                              <td style={{ padding: 8 }}>
+                                {item.image && (
+                                  <img
+                                    src={
+                                      item.image.startsWith("http")
+                                        ? item.image
+                                        : `${API_URL}/${item.image}`
+                                    }
+                                    alt={item.title}
+                                    className="showcase-admin-image"
+                                  />
+                                )}
+                              </td>
+                              <td style={{ padding: 8 }}>{item.title}</td>
+                              <td style={{ padding: 8 }}>{item.subtitle}</td>
+                              <td style={{ padding: 8 }}>{item.order}</td>
+                              <td style={{ padding: 8 }}>
+                                <button
+                                  className="admin-tab"
+                                  style={{ marginRight: 8 }}
+                                  onClick={() => handleShowcaseEdit(item)}
+                                >
+                                  Edit
+                                </button>
+                                <button
+                                  className="admin-tab"
+                                  style={{ color: "#be185d" }}
+                                  onClick={() => handleShowcaseDelete(item._id)}
+                                >
+                                  Delete
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+          {tab === "testimonials" && (
+            <div
+              className="admin-section-card"
+              style={{
+                background: "#fff",
+                borderRadius: 16,
+                boxShadow: "0 2px 12px #fbb6ce22",
+                padding: "2.5rem 2rem",
+                margin: "0 auto",
+                maxWidth: 700,
+              }}
+            >
+              <h2
+                style={{
+                  color: "#be185d",
+                  fontWeight: 700,
+                  fontSize: 22,
+                  marginBottom: 18,
+                }}
+              >
+                Manage Testimonials
+              </h2>
+              {testimonialsLoading ? (
+                <div style={{ color: "#be185d", fontWeight: 600 }}>
+                  Loading...
+                </div>
+              ) : (
+                <>
+                  <form
+                    onSubmit={handleTestimonialSubmit}
+                    style={{ marginBottom: 24 }}
+                  >
+                    <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
+                      <input
+                        type="text"
+                        name="name"
+                        placeholder="Name"
+                        className="admin-input"
+                        style={{ flex: 1 }}
+                        value={testimonialForm.name}
+                        onChange={handleTestimonialFormChange}
+                      />
+                      <input
+                        type="number"
+                        name="order"
+                        placeholder="Order"
+                        className="admin-input"
+                        style={{ width: 80 }}
+                        value={testimonialForm.order}
+                        onChange={handleTestimonialFormChange}
+                      />
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 4,
+                        }}
+                      >
+                        <div>
+                          <label>
+                            <input
+                              type="radio"
+                              name="testimonialImageSource"
+                              value="url"
+                              checked={testimonialImageSource === "url"}
+                              onChange={() => setTestimonialImageSource("url")}
+                            />
+                            Image URL
+                          </label>
+                          <label style={{ marginLeft: 8 }}>
+                            <input
+                              type="radio"
+                              name="testimonialImageSource"
+                              value="upload"
+                              checked={testimonialImageSource === "upload"}
+                              onChange={() =>
+                                setTestimonialImageSource("upload")
+                              }
+                            />
+                            Upload Image
+                          </label>
+                        </div>
+                        {testimonialImageSource === "url" ? (
+                          <input
+                            type="text"
+                            name="image"
+                            placeholder="Image URL"
+                            className="admin-input"
+                            value={testimonialForm.image}
+                            onChange={handleTestimonialFormChange}
+                            style={{ width: 180 }}
+                          />
+                        ) : (
+                          <input
+                            type="file"
+                            ref={testimonialImageRef}
+                            className="admin-input"
+                            style={{ width: 180 }}
+                            accept="image/*"
+                          />
+                        )}
+                      </div>
+                    </div>
+                    <textarea
+                      name="text"
+                      placeholder="Testimonial text"
+                      className="admin-input"
+                      style={{ width: "100%", marginBottom: 8 }}
+                      rows={2}
+                      value={testimonialForm.text}
+                      onChange={handleTestimonialFormChange}
+                    />
+                    <button
+                      className="signup-btn"
+                      type="submit"
+                      disabled={testimonialSaving}
+                    >
+                      {testimonialForm._id ? "Update" : "Add"}
+                    </button>
+                    {testimonialSuccess && (
+                      <span style={{ color: "green", marginLeft: 16 }}>
+                        {testimonialSuccess}
+                      </span>
+                    )}
+                    {testimonialsError && (
+                      <span style={{ color: "#be185d", marginLeft: 16 }}>
+                        {testimonialsError}
+                      </span>
+                    )}
+                  </form>
+                  <div>
+                    {testimonials.length === 0 ? (
+                      <div style={{ color: "#be185d", fontWeight: 600 }}>
+                        No testimonials.
+                      </div>
+                    ) : (
+                      <table
+                        style={{ width: "100%", borderCollapse: "collapse" }}
+                      >
+                        <thead>
+                          <tr style={{ background: "#fce7f3" }}>
+                            <th style={{ padding: 8 }}>Image</th>
+                            <th style={{ padding: 8 }}>Name</th>
+                            <th style={{ padding: 8 }}>Text</th>
+                            <th style={{ padding: 8 }}>Order</th>
+                            <th style={{ padding: 8 }}>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {testimonials.map((t) => (
+                            <tr key={t._id}>
+                              <td>
+                                {t.image && (
+                                  <img
+                                    src={
+                                      t.image.startsWith("http")
+                                        ? t.image
+                                        : `${API_URL}/${t.image}`
+                                    }
+                                    alt={t.name}
+                                    className="testimonial-admin-image"
+                                  />
+                                )}
+                              </td>
+                              <td>{t.name}</td>
+                              <td>{t.text}</td>
+                              <td>{t.order}</td>
+                              <td>
+                                <button
+                                  className="admin-tab"
+                                  style={{ marginRight: 8 }}
+                                  onClick={() => handleTestimonialEdit(t)}
+                                >
+                                  Edit
+                                </button>
+                                <button
+                                  className="admin-tab"
+                                  style={{ color: "#be185d" }}
+                                  onClick={() => handleTestimonialDelete(t._id)}
+                                >
+                                  Delete
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
