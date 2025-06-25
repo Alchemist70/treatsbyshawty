@@ -15,4 +15,14 @@ const auth = (req, res, next) => {
   }
 };
 
-module.exports = auth;
+const adminAuth = (req, res, next) => {
+  auth(req, res, () => {
+    if (req.user && req.user.isAdmin) {
+      next();
+    } else {
+      res.status(403).json({ message: "Admin access required" });
+    }
+  });
+};
+
+module.exports = { auth, adminAuth };

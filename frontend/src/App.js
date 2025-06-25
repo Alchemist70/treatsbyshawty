@@ -40,6 +40,7 @@ import ResetPassword from "./pages/ResetPassword";
 import Sidebar from "./components/Sidebar";
 import Layout from "./components/Layout";
 import AdminFeedback from "./pages/AdminFeedback";
+import AdminUsers from "./pages/AdminUsers";
 
 function AppContent() {
   const location = useLocation();
@@ -92,6 +93,7 @@ function AppContent() {
         <Route path="/admin/orders" element={<AdminOrders />} />
         <Route path="/admin/preorders" element={<AdminPreOrders />} />
         <Route path="/admin/feedback" element={<AdminFeedback />} />
+        <Route path="/admin/users" element={<AdminUsers />} />
       </Routes>
       <Sidebar />
     </div>
@@ -151,6 +153,7 @@ function App() {
           <Route path="/admin/orders" element={<AdminOrders />} />
           <Route path="/admin/preorders" element={<AdminPreOrders />} />
           <Route path="/admin/feedback" element={<AdminFeedback />} />
+          <Route path="/admin/users" element={<AdminUsers />} />
         </Routes>
       </Layout>
     </Router>

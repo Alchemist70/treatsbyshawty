@@ -40,6 +40,11 @@ app.use("/api/product-showcase", require("./routes/productShowcase"));
 app.use("/api/testimonials", require("./routes/testimonials"));
 app.use("/api/cart", require("./routes/cart"));
 app.use("/api", require("./routes/index"));
+app.use("/api/users", require("./routes/users"));
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("frontend/build"));
+}
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

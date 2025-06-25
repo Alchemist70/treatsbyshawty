@@ -15,6 +15,7 @@ export default function AdminSignup() {
     email: "",
     password: "",
     confirm: "",
+    secretCode: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -46,6 +47,7 @@ export default function AdminSignup() {
           email: form.email,
           password: form.password,
           isAdmin: true,
+          secretCode: form.secretCode,
         }),
       });
       const data = await res.json();
@@ -140,6 +142,18 @@ export default function AdminSignup() {
                 />
               </span>
             </div>
+          </div>
+          <div className="input-group">
+            <label htmlFor="secretCode">Admin Secret Code</label>
+            <input
+              id="secretCode"
+              name="secretCode"
+              type="password"
+              value={form.secretCode}
+              onChange={handleChange}
+              required
+              placeholder="Enter admin secret"
+            />
           </div>
           <button className="auth-btn" type="submit" disabled={loading}>
             {loading ? "Creating Account..." : "Create Admin Account"}
