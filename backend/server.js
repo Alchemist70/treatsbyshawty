@@ -13,7 +13,18 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+const allowedOrigins = [
+  "https://treatsbyshawty-45r0.onrender.com",
+  "http://localhost:3000",
+];
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 app.use(cookieParser());
 
 // Serve static files from the 'uploads' directory
