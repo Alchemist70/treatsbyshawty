@@ -5,7 +5,6 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import Logo from "../assets/logo.png";
-import { API_URL } from "../config";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -37,7 +36,7 @@ export default function Login() {
     setError("");
     setLoading(true);
     try {
-      const res = await axios.post(`${API_URL}/api/auth/login`, form);
+      const res = await axios.post("/api/auth/login", form);
       const data = res.data;
 
       // Save token and user info
@@ -53,7 +52,7 @@ export default function Login() {
 
       // --- Cart Sync Logic ---
       const localCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-      const serverCartRes = await axios.get(`${API_URL}/api/cart`, {
+      const serverCartRes = await axios.get("/api/cart", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const serverCart = serverCartRes.data;
@@ -81,7 +80,7 @@ export default function Login() {
       // Sync the final merged cart back to the server if it has changed
       if (finalCart.length > serverCart.length) {
         await axios.put(
-          `${API_URL}/api/cart`,
+          "/api/cart",
           { cartItems: finalCart },
           {
             headers: { Authorization: `Bearer ${token}` },
